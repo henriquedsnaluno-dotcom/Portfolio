@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio Acadêmico - [SEU NOME COMPLETO]</title>
+    <!-- O exemplo usa uma fonte do Google Fonts. Vamos usar a mesma! -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Este é o link para o arquivo CSS que você vai criar -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. CABEÇALHO (HEADER) -->
+    <header>
+        <div class="container">
+            <h1 class="logo">[SEU NOME COMPLETO] / Portfólio</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#projetos">Projetos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 2. APRESENTAÇÃO (HERO SECTION) -->
+    <section class="hero">
+        <div class="container">
+            <h2>Bem-vindo ao meu Portfólio Acadêmico</h2>
+            <p>Este espaço centraliza todos os projetos, atividades e artefatos que desenvolvi durante a disciplina [NOME DA DISCIPLINA]. Aqui você pode acompanhar minha evolução e explorar os resultados obtidos.</p>
+        </div>
+    </section>
+
+    <!-- 3. SEÇÃO DE PROJETOS (GRID DE CARDS) -->
+    <section id="projetos" class="projetos">
+        <div class="container">
+            <h2>Todas as Entregas</h2>
+            
+            <div class="card-container">
+                <!-- EXEMPLE DE CARD 1 - Crie um destes para cada entrega! -->
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x200?text=Projeto+1" alt="Imagem ou Ícone do Projeto 1"> <!-- Você pode usar uma imagem real do seu projeto aqui -->
+                    <h3>[TÍTULO DA ENTREGA 1 - Ex: Atividade 1]</h3>
+                    <p>[Uma breve descrição da atividade. Ex: Este projeto foi focado no desenvolvimento de uma página HTML simples...]</p>
+                    <a href="projeto1.html" class="btn">Visualizar Detalhes</a> <!-- Link para a página interna ou repositório -->
+                </div>
+                
+                <!-- EXEMPLO DE CARD 2 -->
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x200?text=Projeto+2" alt="Imagem ou Ícone do Projeto 2">
+                    <h3>[TÍTULO DA ENTREGA 2 - Ex: Projeto JavaScript]</h3>
+                    <p>[Descrição curta. Ex: Desenvolvimento de um formulário de contato com validação em JavaScript...]</p>
+                    <a href="projeto2.html" class="btn">Visualizar Detalhes</a>
+                </div>
+
+                <!-- ADICIONE MAIS CARDS AQUI CONFORME O SEU NÚMERO DE ENTREGAS -->
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x200?text=Projeto+3" alt="Imagem ou Ícone do Projeto 3">
+                    <h3>[TÍTULO DA ENTREGA 3]</h3>
+                    <p>[Descrição curta]</p>
+                    <a href="https://github.com/[seu-usuario]/[repositorio-projeto3]" class="btn" target="_blank">Acessar Repositório</a> <!-- Exemplo de link direto para o repositório -->
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SOBRE MIM (Opcional, mas recomendado) -->
+    <section id="sobre" class="sobre">
+        <div class="container">
+            <h2>Sobre Mim</h2>
+            <p>Eu sou [SEU NOME COMPLETO], estudante do curso de [SEU CURSO]. Este portfólio faz parte da minha avaliação para a disciplina [NOME DA DISCIPLINA].</p>
+        </div>
+    </section>
+
+    <!-- 5. RODAPÉ (FOOTER) -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 - [SEU NOME COMPLETO]. Todos os direitos reservados.</p>
+            <p>Contatos: [SEU E-MAIL] | [LINK PARA SEU LINKEDIN]</p>
+        </div>
+    </footer>
+
+</body>
+</html>
