@@ -1,87 +1,219 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Acadêmico - [SEU NOME COMPLETO]</title>
-    <!-- O exemplo usa uma fonte do Google Fonts. Vamos usar a mesma! -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Este é o link para o arquivo CSS que você vai criar -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* CONFIGURAÇÕES GERAIS E RESETS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <!-- 1. CABEÇALHO (HEADER) -->
-    <header>
-        <div class="container">
-            <h1 class="logo">[SEU NOME COMPLETO] / Portfólio</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#sobre">Sobre</a></li>
-                    <li><a href="#projetos">Projetos</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+html {
+    scroll-behavior: smooth;
+}
 
-    <!-- 2. APRESENTAÇÃO (HERO SECTION) -->
-    <section class="hero">
-        <div class="container">
-            <h2>Bem-vindo ao meu Portfólio Acadêmico</h2>
-            <p>Este espaço centraliza todos os projetos, atividades e artefatos que desenvolvi durante a disciplina [NOME DA DISCIPLINA]. Aqui você pode acompanhar minha evolução e explorar os resultados obtidos.</p>
-        </div>
-    </section>
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #121212; /* Preto de fundo */
+    color: #ffffff; /* Texto branco */
+    line-height: 1.6;
+}
 
-    <!-- 3. SEÇÃO DE PROJETOS (GRID DE CARDS) -->
-    <section id="projetos" class="projetos">
-        <div class="container">
-            <h2>Todas as Entregas</h2>
-            
-            <div class="card-container">
-                <!-- EXEMPLE DE CARD 1 - Crie um destes para cada entrega! -->
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Projeto+1" alt="Imagem ou Ícone do Projeto 1"> <!-- Você pode usar uma imagem real do seu projeto aqui -->
-                    <h3>[TÍTULO DA ENTREGA 1 - Ex: Atividade 1]</h3>
-                    <p>[Uma breve descrição da atividade. Ex: Este projeto foi focado no desenvolvimento de uma página HTML simples...]</p>
-                    <a href="projeto1.html" class="btn">Visualizar Detalhes</a> <!-- Link para a página interna ou repositório -->
-                </div>
-                
-                <!-- EXEMPLO DE CARD 2 -->
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Projeto+2" alt="Imagem ou Ícone do Projeto 2">
-                    <h3>[TÍTULO DA ENTREGA 2 - Ex: Projeto JavaScript]</h3>
-                    <p>[Descrição curta. Ex: Desenvolvimento de um formulário de contato com validação em JavaScript...]</p>
-                    <a href="projeto2.html" class="btn">Visualizar Detalhes</a>
-                </div>
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
 
-                <!-- ADICIONE MAIS CARDS AQUI CONFORME O SEU NÚMERO DE ENTREGAS -->
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Projeto+3" alt="Imagem ou Ícone do Projeto 3">
-                    <h3>[TÍTULO DA ENTREGA 3]</h3>
-                    <p>[Descrição curta]</p>
-                    <a href="https://github.com/[seu-usuario]/[repositorio-projeto3]" class="btn" target="_blank">Acessar Repositório</a> <!-- Exemplo de link direto para o repositório -->
-                </div>
+/* CABEÇALHO */
+header {
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #2d2d2d;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-            </div>
-        </div>
-    </section>
+.container.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
 
-    <!-- 4. SOBRE MIM (Opcional, mas recomendado) -->
-    <section id="sobre" class="sobre">
-        <div class="container">
-            <h2>Sobre Mim</h2>
-            <p>Eu sou [SEU NOME COMPLETO], estudante do curso de [SEU CURSO]. Este portfólio faz parte da minha avaliação para a disciplina [NOME DA DISCIPLINA].</p>
-        </div>
-    </section>
+header h1.logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
 
-    <!-- 5. RODAPÉ (FOOTER) -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 - [SEU NOME COMPLETO]. Todos os direitos reservados.</p>
-            <p>Contatos: [SEU E-MAIL] | [LINK PARA SEU LINKEDIN]</p>
-        </div>
-    </footer>
+header nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
 
-</body>
-</html>
+header nav a {
+    color: #a0a0a0;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+header nav a:hover {
+    color: #ffffff;
+}
+
+/* HERO SECTION */
+.hero {
+    text-align: center;
+    padding: 60px 0;
+    background: linear-gradient(to bottom, #1a1a1a, #121212);
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.hero .subtitle {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* SEÇÃO DE ENTREGAS */
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    border-left: 4px solid #ffffff;
+    padding-left: 15px;
+}
+
+.grid-atividades {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* CARDS DAS ATIVIDADES */
+.card-atividade {
+    background-color: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.card-atividade:hover {
+    transform: translateY(-5px);
+    border-color: #444444;
+}
+
+.card-badge {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    width: max-content;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.card-atividade h4 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.card-atividade .descricao {
+    font-size: 0.95rem;
+    color: #cccccc;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.card-atividade .tecnologias {
+    font-size: 0.85rem;
+    color: #a0a0a0;
+    margin-bottom: 20px;
+}
+
+.card-atividade .tecnologias span {
+    background-color: #252525;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+/* BOTÕES */
+.btn-primary {
+    display: inline-block;
+    background-color: #ffffff;
+    color: #121212;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-align: center;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #e0e0e0;
+}
+
+/* SEÇÃO SOBRE */
+.sobre-box {
+    background-color: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    padding: 30px;
+}
+
+.sobre-box p {
+    color: #cccccc;
+    margin-bottom: 15px;
+}
+
+/* RODAPÉ */
+footer {
+    background-color: #0a0a0a;
+    border-top: 1px solid #2d2d2d;
+    font-size: 0.9rem;
+    color: #777777;
+}
+
+.container.footer-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 30px 20px;
+}
+
+footer a {
+    color: #a0a0a0;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #ffffff;
+}
+
+/* RESPONSIVIDADE (MOBILE-FRIENDLY) */
+@media (max-width: 600px) {
+    .container.header-flex, .container.footer-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+    header nav ul {
+        margin-top: 15px;
+    }
+}
