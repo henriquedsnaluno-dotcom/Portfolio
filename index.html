@@ -1,17 +1,23 @@
-﻿# Lendo os dados do usuário
-velocidade_inicial = float(input("Digite a velocidade inicial (m/s): "))
-aceleracao = float(input("Digite a aceleração (m/s²): "))
-tempo = float(input("Digite o tempo (s): "))
+﻿# Programa para calcular o ponto de equilíbrio
+custo_fixo = float(input("Digite o custo fixo: "))
+custo_variavel_por_unidade = float(input("Digite o custo variável por unidade: "))
+preco_venda = float(input("Digite o preço de venda por unidade: "))
+N = int(input("Digite o número máximo de unidades a serem calculadas: "))
 
 
-# Calculando a velocidade final
-velocidade_final = velocidade_inicial + aceleracao * tempo
+print("Unidades | Lucro/Prejuízo")
+for unidades in range(N + 1):
+    lucro = (preco_venda * unidades) - (custo_fixo + custo_variavel_por_unidade * unidades)
+    print(f"{unidades}       | {lucro:.2f}")
 
 
-# Calculando o espaço percorrido
-espaco_percorrido = velocidade_inicial * tempo + 0.5 * aceleracao * (tempo ** 2)
+    if lucro >= 0 and unidades == 0:
+        ponto_equilibrio = unidades
+    elif lucro >= 0 and 'ponto_equilibrio' not in locals():
+        ponto_equilibrio = unidades
 
 
-# Exibindo os resultados
-print(f"Velocidade final: {velocidade_final:.2f} m/s")
-print(f"Espaço percorrido: {espaco_percorrido:.2f} m")
+if 'ponto_equilibrio' in locals():
+    print(f"Ponto de Equilíbrio: {ponto_equilibrio} unidades")
+else:
+    print("Não há ponto de equilíbrio dentro do intervalo fornecido.")
