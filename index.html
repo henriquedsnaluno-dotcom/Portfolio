@@ -1,92 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio das Atividades</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+﻿# Lendo os dados do usuário
+velocidade_inicial = float(input("Digite a velocidade inicial (m/s): "))
+aceleracao = float(input("Digite a aceleração (m/s²): "))
+tempo = float(input("Digite o tempo (s): "))
 
-    <header>
-        <div class="container header-flex">
-            <h1 class="logo">Portfolio das Atividades</h1>
-            <nav>
-                <ul>
-                    <li><a href="#inicio">Início</a></li>
-                    <li><a href="#entregas">Entregas</a></li>
-                    <li><a href="#sobre">Sobre</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <section id="inicio" class="hero">
-        <div class="container">
-            <h2>Algoritmos e Programação 2026</h2>
-            <p class="subtitle">Espaço dedicado à consolidação de todas as atividades, exercícios e artefatos produzidos durante o semestre acadêmico.</p>
-        </div>
-    </section>
+# Calculando a velocidade final
+velocidade_final = velocidade_inicial + aceleracao * tempo
 
-    <section id="entregas" class="entregas-section">
-        <div class="container">
-            <h3 class="section-title">Trabalhos Desenvolvidos</h3>
-            
-            <div class="grid-atividades">
-                
-                <div class="card-atividade">
-                    <div class="card-badge">Módulo 1</div>
-                    <h4>Atividade 1: [Nome da Atividade]</h4>
-                    <p class="descricao"><strong>Objetivo:</strong> [Ex: Desenvolvimento de lógica inicial e estruturas condicionais.]</p>
-                    <p class="tecnologias">🛠️ <span>HTML</span> <span>CSS</span></p>
-                    <div class="card-links">
-                        <a href="[LINK_DA_SUA_ATIVIDADE_1]" class="btn-primary" target="_blank">Visualizar Projeto</a>
-                    </div>
-                </div>
 
-                <div class="card-atividade">
-                    <div class="card-badge">Módulo 2</div>
-                    <h4>Atividade 2: [Nome da Atividade]</h4>
-                    <p class="descricao"><strong>Objetivo:</strong> [Ex: Manipulação de arrays, repetições e funções estruturadas.]</p>
-                    <p class="tecnologias">🛠️ <span>JavaScript</span></p>
-                    <div class="card-links">
-                        <a href="[LINK_DA_SUA_ATIVIDADE_2]" class="btn-primary" target="_blank">Visualizar Projeto</a>
-                    </div>
-                </div>
+# Calculando o espaço percorrido
+espaco_percorrido = velocidade_inicial * tempo + 0.5 * aceleracao * (tempo ** 2)
 
-                <div class="card-atividade">
-                    <div class="card-badge">Módulo 3</div>
-                    <h4>Atividade 3: [Nome da Atividade]</h4>
-                    <p class="descricao"><strong>Objetivo:</strong> [Ex: Armazenamento local de dados e integração de interface.]</p>
-                    <p class="tecnologias">🛠️ <span>HTML</span> <span>JS</span></p>
-                    <div class="card-links">
-                        <a href="[LINK_DA_SUA_ATIVIDADE_3]" class="btn-primary" target="_blank">Visualizar Projeto</a>
-                    </div>
-                </div>
 
-            </div>
-        </div>
-    </section>
-
-    <section id="sobre" class="sobre-section">
-        <div class="container">
-            <h3 class="section-title">Sobre o Autor</h3>
-            <div class="sobre-box">
-                <p>Olá! Meu nome é <strong>Henrique</strong>. Este portfólio acadêmico foi desenvolvido para centralizar de forma clara e navegável todos os resultados e lições aprendidas na disciplina de Algoritmos e Programação.</p>
-                <p class="🎓">Estudante de Tecnologia • 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container footer-flex">
-            <p>&copy; 2026 - Henrique. Todos os direitos reservados.</p>
-            <div class="footer-links">
-                <a href="https://github.com/henriquedsnaluno-dotcom" target="_blank">Meu GitHub</a>
-            </div>
-        </div>
-    </footer>
-
-</body>
-</html>
+# Exibindo os resultados
+print(f"Velocidade final: {velocidade_final:.2f} m/s")
+print(f"Espaço percorrido: {espaco_percorrido:.2f} m")
