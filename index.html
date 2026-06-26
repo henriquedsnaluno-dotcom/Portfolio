@@ -3,83 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Acadêmico - [SEU NOME COMPLETO]</title>
-    <!-- O exemplo usa uma fonte do Google Fonts. Vamos usar a mesma! -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Este é o link para o arquivo CSS que você vai criar -->
+    <title>Portfólio das Atividades</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- 1. CABEÇALHO (HEADER) -->
     <header>
-        <div class="container">
-            <h1 class="logo">[SEU NOME COMPLETO] / Portfólio</h1>
+        <div class="container header-flex">
+            <h1 class="logo">Portfolio das Atividades</h1>
             <nav>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#entregas">Entregas</a></li>
                     <li><a href="#sobre">Sobre</a></li>
-                    <li><a href="#projetos">Projetos</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- 2. APRESENTAÇÃO (HERO SECTION) -->
-    <section class="hero">
+    <section id="inicio" class="hero">
         <div class="container">
-            <h2>Bem-vindo ao meu Portfólio Acadêmico</h2>
-            <p>Este espaço centraliza todos os projetos, atividades e artefatos que desenvolvi durante a disciplina [NOME DA DISCIPLINA]. Aqui você pode acompanhar minha evolução e explorar os resultados obtidos.</p>
+            <h2>Algoritmos e Programação 2026</h2>
+            <p class="subtitle">Espaço dedicado à consolidação de todas as atividades, exercícios e artefatos produzidos durante o semestre acadêmico.</p>
         </div>
     </section>
 
-    <!-- 3. SEÇÃO DE PROJETOS (GRID DE CARDS) -->
-    <section id="projetos" class="projetos">
+    <section id="entregas" class="entregas-section">
         <div class="container">
-            <h2>Todas as Entregas</h2>
+            <h3 class="section-title">Trabalhos Desenvolvidos</h3>
             
-            <div class="card-container">
-                <!-- EXEMPLE DE CARD 1 - Crie um destes para cada entrega! -->
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Projeto+1" alt="Imagem ou Ícone do Projeto 1"> <!-- Você pode usar uma imagem real do seu projeto aqui -->
-                    <h3>[TÍTULO DA ENTREGA 1 - Ex: Atividade 1]</h3>
-                    <p>[Uma breve descrição da atividade. Ex: Este projeto foi focado no desenvolvimento de uma página HTML simples...]</p>
-                    <a href="projeto1.html" class="btn">Visualizar Detalhes</a> <!-- Link para a página interna ou repositório -->
-                </div>
+            <div class="grid-atividades">
                 
-                <!-- EXEMPLO DE CARD 2 -->
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Projeto+2" alt="Imagem ou Ícone do Projeto 2">
-                    <h3>[TÍTULO DA ENTREGA 2 - Ex: Projeto JavaScript]</h3>
-                    <p>[Descrição curta. Ex: Desenvolvimento de um formulário de contato com validação em JavaScript...]</p>
-                    <a href="projeto2.html" class="btn">Visualizar Detalhes</a>
+                <div class="card-atividade">
+                    <div class="card-badge">Módulo 1</div>
+                    <h4>Atividade 1: [Nome da Atividade]</h4>
+                    <p class="descricao"><strong>Objetivo:</strong> [Ex: Desenvolvimento de lógica inicial e estruturas condicionais.]</p>
+                    <p class="tecnologias">🛠️ <span>HTML</span> <span>CSS</span></p>
+                    <div class="card-links">
+                        <a href="[LINK_DA_SUA_ATIVIDADE_1]" class="btn-primary" target="_blank">Visualizar Projeto</a>
+                    </div>
                 </div>
 
-                <!-- ADICIONE MAIS CARDS AQUI CONFORME O SEU NÚMERO DE ENTREGAS -->
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Projeto+3" alt="Imagem ou Ícone do Projeto 3">
-                    <h3>[TÍTULO DA ENTREGA 3]</h3>
-                    <p>[Descrição curta]</p>
-                    <a href="https://github.com/[seu-usuario]/[repositorio-projeto3]" class="btn" target="_blank">Acessar Repositório</a> <!-- Exemplo de link direto para o repositório -->
+                <div class="card-atividade">
+                    <div class="card-badge">Módulo 2</div>
+                    <h4>Atividade 2: [Nome da Atividade]</h4>
+                    <p class="descricao"><strong>Objetivo:</strong> [Ex: Manipulação de arrays, repetições e funções estruturadas.]</p>
+                    <p class="tecnologias">🛠️ <span>JavaScript</span></p>
+                    <div class="card-links">
+                        <a href="[LINK_DA_SUA_ATIVIDADE_2]" class="btn-primary" target="_blank">Visualizar Projeto</a>
+                    </div>
+                </div>
+
+                <div class="card-atividade">
+                    <div class="card-badge">Módulo 3</div>
+                    <h4>Atividade 3: [Nome da Atividade]</h4>
+                    <p class="descricao"><strong>Objetivo:</strong> [Ex: Armazenamento local de dados e integração de interface.]</p>
+                    <p class="tecnologias">🛠️ <span>HTML</span> <span>JS</span></p>
+                    <div class="card-links">
+                        <a href="[LINK_DA_SUA_ATIVIDADE_3]" class="btn-primary" target="_blank">Visualizar Projeto</a>
+                    </div>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- 4. SOBRE MIM (Opcional, mas recomendado) -->
-    <section id="sobre" class="sobre">
+    <section id="sobre" class="sobre-section">
         <div class="container">
-            <h2>Sobre Mim</h2>
-            <p>Eu sou [SEU NOME COMPLETO], estudante do curso de [SEU CURSO]. Este portfólio faz parte da minha avaliação para a disciplina [NOME DA DISCIPLINA].</p>
+            <h3 class="section-title">Sobre o Autor</h3>
+            <div class="sobre-box">
+                <p>Olá! Meu nome é <strong>Henrique</strong>. Este portfólio acadêmico foi desenvolvido para centralizar de forma clara e navegável todos os resultados e lições aprendidas na disciplina de Algoritmos e Programação.</p>
+                <p class="🎓">Estudante de Tecnologia • 2026</p>
+            </div>
         </div>
     </section>
 
-    <!-- 5. RODAPÉ (FOOTER) -->
     <footer>
-        <div class="container">
-            <p>&copy; 2026 - [SEU NOME COMPLETO]. Todos os direitos reservados.</p>
-            <p>Contatos: [SEU E-MAIL] | [LINK PARA SEU LINKEDIN]</p>
+        <div class="container footer-flex">
+            <p>&copy; 2026 - Henrique. Todos os direitos reservados.</p>
+            <div class="footer-links">
+                <a href="https://github.com/henriquedsnaluno-dotcom" target="_blank">Meu GitHub</a>
+            </div>
         </div>
     </footer>
 
