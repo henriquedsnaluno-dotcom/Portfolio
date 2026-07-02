@@ -1,62 +1,149 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Portfólio de Algoritmos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <title>Portfólio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="container header-flex">
-            <h1 class="logo">Portfólio<span>.</span></h1>
-            <nav>
-                <ul>
-                    <li><a href="#inicio">Início</a></li>
-                    <li><a href="#atividades">Atividades</a></li>
-                </ul>
-            </nav>
-        </div>
+    <header class="navbar">
+        <div class="logo">Portfólio<span class="dot">.</span></div>
+        <nav>
+            <a href="#sobre">Sobre</a>
+            <a href="#entregas" class="active">Atividades</a>
+        </nav>
     </header>
 
-    <section id="inicio" class="hero">
-        <div class="container">
-            <h2>Algoritmos & Programação</h2>
-            <p>Repositório acadêmico para centralização de exercícios, códigos e relatórios desenvolvidos durante o semestre.</p>
-        </div>
-    </section>
+    <main class="container">
+        
+        <section id="sobre" class="about-section">
+            <div class="section-title-wrapper">
+                <span class="vertical-bar"></span>
+                <h2>Sobre o Autor</h2>
+            </div>
+            <div class="about-content">
+                <p>Olá! Bem-vindo ao meu portfólio. Sou um desenvolvedor em início de carreira, focado em criar soluções limpas e eficientes. Aqui você pode acompanhar a evolução dos meus estudos através das minhas entregas de projetos e algoritmos.</p>
+                <div class="social-links">
+                    <a href="#" target="_blank" class="social-btn">GitHub</a>
+                    <a href="#" target="_blank" class="social-btn">LinkedIn</a>
+                    <a href="#" target="_blank" class="social-btn">Discord</a>
+                </div>
+            </div>
+        </section>
 
-    <section id="atividades" class="atividades-section">
-        <div class="container">
-            <h3 class="titulo-secao">Minhas Entregas</h3>
-            
-            <div class="grid-portfolio">
+        <section id="entregas" class="portfolio-section">
+            <div class="section-title-wrapper">
+                <span class="vertical-bar"></span>
+                <h2>Minhas Entregas</h2>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="searchBar" placeholder="🔍 Buscar atividade pelo título..." onkeyup="filtrarAtividades()">
+            </div>
+
+            <div class="grid-atividades" id="gridAtividades">
                 
-                <div class="card">
-                    <div class="card-numero">01</div>
-                    <h4>Atividade 01</h4>
-                   <h4>Resolução de Algoritmos Estruturados</h4> <p>Lista com os 15 exercícios selecionados e resolvidos a partir das apostilas e livros do Classroom.</p>
-                    <a href="https://docs.google.com/document/d/1BY9c7MtcKPklhW-FnotkRnc3zPetZ4Uy/edit?dls=true&tab=t.0" target="_blank" class="btn-ver">Abrir Atividade →</a>
+                <div class="card-atividade">
+                    <span class="card-number">01</span>
+                    <h3>Atividade 01</h3>
+                    <h4>Resolução de Algoritmos Estruturados</h4>
+                    <p>Lista com os 15 exercícios selecionados e resolvidos a partir das apostilas e livros do Classroom.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
                 </div>
 
-                <div class="card">
-                    <div class="card-numero">02</div>
-                    <h4>Atividade 02</h4>
-                    <p>Resolução de lista com 10 exercícios práticos em terminal.</p>
-                    <a href="./Atividade2/index.html" target="_blank" class="btn-ver">Abrir Atividade →</a>
+                <div class="card-atividade">
+                    <span class="card-number">02</span>
+                    <h3>Atividade 02</h3>
+                    <h4>Resolução de Exercícios em Terminal</h4>
+                    <p>Lista com 10 exercícios práticos em terminal focados em lógica e comandos básicos.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
                 </div>
 
+                <div class="card-atividade">
+                    <span class="card-number">03</span>
+                    <h3>Atividade 03</h3>
+                    <h4>Manipulação de Strings e Listas</h4>
+                    <p>Exercícios práticos envolvendo tratamento de dados, formatação de textos e arrays.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
                 </div>
-        </div>
-    </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Henrique. Desenvolvido com HTML e CSS.</p>
-        </div>
-    </footer>
+                <div class="card-atividade">
+                    <span class="card-number">04</span>
+                    <h3>Atividade 04</h3>
+                    <h4>Funções e Modularização</h4>
+                    <p>Criação de código limpo e reutilizável dividindo regras de negócio em funções específicas.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
+                </div>
 
+                <div class="card-atividade">
+                    <span class="card-number">05</span>
+                    <h3>Atividade 05</h3>
+                    <h4>Introdução à Programação Orientada a Objetos</h4>
+                    <p>Modelagem de classes, atributos e métodos simples aplicando conceitos básicos de POO.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
+                </div>
+
+                <div class="card-atividade">
+                    <span class="card-number">06</span>
+                    <h3>Atividade 06</h3>
+                    <h4>Leitura e Escrita de Arquivos</h4>
+                    <p>Persistência de dados local salvando informações e relatórios em arquivos de texto e JSON.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
+                </div>
+
+                <div class="card-atividade">
+                    <span class="card-number">07</span>
+                    <h3>Atividade 07</h3>
+                    <h4>Consumo de APIs Externas</h4>
+                    <p>Integração de aplicações com requisições HTTP para buscar e exibir dados dinâmicos da web.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
+                </div>
+
+                <div class="card-atividade">
+                    <span class="card-number">08</span>
+                    <h3>Atividade 08</h3>
+                    <h4>Interface Gráfica com Usuário</h4>
+                    <p>Desenvolvimento de pequenas janelas e componentes visuais interativos para o usuário.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
+                </div>
+
+                <div class="card-atividade">
+                    <span class="card-number">09</span>
+                    <h3>Atividade 09</h3>
+                    <h4>Banco de Dados Relacional</h4>
+                    <p>Criação de queries SQL e conexão da aplicação com bancos locais para gerenciamento de dados.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
+                </div>
+
+                <div class="card-atividade">
+                    <span class="card-number">10</span>
+                    <h3>Atividade 10</h3>
+                    <h4>Projeto Integrador Final</h4>
+                    <p>Aplicação completa unindo todos os conceitos vistos ao longo do semestre em um único sistema.</p>
+                    <a href="#" class="btn-link">Abrir Atividade &rarr;</a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function filtrarAtividades() {
+            let input = document.getElementById('searchBar').value.toLowerCase();
+            let cards = document.getElementsByClassName('card-atividade');
+            
+            for (let i = 0; i < cards.length; i++) {
+                let titulo = cards[i].getElementsByTagName('h4')[0].innerText.toLowerCase();
+                let sub = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                if (titulo.includes(input) || sub.includes(input)) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 </body>
 </html>
