@@ -3,19 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio</title>
+    <title>Portfólio Acadêmico - Henrique da Silva Nunes</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="navbar">
-        <div class="logo">Portfólio<span class="dot">.</span></div>
+        <div class="logo">hsn <span class="divider">/</span> portfolio</div>
         <nav>
+            <a href="#inicio">Início</a>
             <a href="#sobre">Sobre</a>
             <a href="#competencias">Competências</a>
             <a href="#entregas" class="active">Atividades</a>
         </nav>
     </header>
+
+    <section id="inicio" class="hero-section">
+        <div class="container">
+            <span class="hero-subtitle">// PORTFÓLIO ACADÊMICO • 2026</span>
+            <h1 class="hero-title">Henrique Viana <br><span class="highlight-text">de Nunes</span></h1>
+            <p class="hero-description">Estudante de Engenharia — Algoritmos & Programação com Python.<br>Universidade Federal do Pampa · Alegrete, RS.</p>
+            <div class="badge-container">
+                <span class="badge"><span class="dot-green"></span> Semestre em andamento</span>
+                <span class="badge">Matrícula 2610101121</span>
+                <span class="badge">Prof. Diego Luis Kreutz</span>
+            </div>
+            <div class="scroll-down">
+                <span>ROLAR</span>
+                <div class="arrow-down">↓</div>
+            </div>
+        </div>
+    </section>
 
     <main class="container">
         
@@ -24,85 +42,86 @@
                 <span class="vertical-bar"></span>
                 <h2>Sobre o Autor</h2>
             </div>
-            <div class="about-content" style="background-color: #0d1117; border: 1px solid #222; border-radius: 8px; padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div class="about-card">
                 <div class="about-text">
-                    <h3 style="margin-bottom: 10px; font-size: 22px;">Henrique da Silva Nunes</h3>
-                    <p style="color: #777; line-height: 1.6;">Estudante de engenharia no curso de Algoritmos e Programação ministrado pelo Prof. Diego Luis Kreutz. Ao longo deste semestre desenvolvi habilidades em lógica de programação, Python, estruturas de dados, e uso de ferramentas de inteligência artificial como apoio ao aprendizado.</p>
+                    <h3>Henrique da Silva Nunes</h3>
+                    <p>Estudante de engenharia no curso de Algoritmos e Programação ministrado pelo Prof. Diego Luis Kreutz. Ao longo deste semestre desenvolvi habilidades em lógica de programação, Python, estruturas de dados, e uso de ferramentas de inteligência artificial como apoio ao aprendizado.</p>
                 </div>
-                <div class="academic-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-left: 1px solid #222; padding-left: 30px;">
-                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
-                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">MATRÍCULA</span>
-                        <span class="value" style="font-weight: bold;">2610101121</span>
+                <div class="academic-grid">
+                    <div class="academic-item">
+                        <span class="label">MATRÍCULA</span>
+                        <span class="value">2610101121</span>
                     </div>
-                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
-                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">DISCIPLINA</span>
-                        <span class="value" style="font-weight: bold;">Algoritmos e Programação</span>
+                    <div class="academic-item">
+                        <span class="label">DISCIPLINA</span>
+                        <span class="value">Algoritmos e Programação</span>
                     </div>
-                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
-                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">PROFESSOR</span>
-                        <span class="value" style="font-weight: bold;">Diego Luis Kreutz</span>
+                    <div class="academic-item">
+                        <span class="label">PROFESSOR</span>
+                        <span class="value">Diego Luis Kreutz</span>
                     </div>
-                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
-                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">SEMESTRE</span>
-                        <span class="value" style="font-weight: bold;">2026/1 — UNIPAMPA</span>
+                    <div class="academic-item">
+                        <span class="label">SEMESTRE</span>
+                        <span class="value">2026/1 — UNIPAMPA Alegrete</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="competencias" class="portfolio-section" style="margin-top: 40px;">
+        <section id="competencias" class="skills-section">
+            <span class="section-tag">04 — HABILIDADES</span>
             <div class="section-title-wrapper">
                 <span class="vertical-bar"></span>
-                <h2>Competências Desenvolvidas</h2>
+                <h2>Competências <span class="italic-title">desenvolvidas</span></h2>
             </div>
             
-            <div class="grid-atividades">
-                <div class="card-atividade" style="min-height: auto; padding: 25px;">
-                    <div style="font-size: 24px; margin-bottom: 10px;">🐍</div>
-                    <h4 style="margin-top: 5px;">Python</h4>
-                    <p style="margin-bottom: 15px;">Variáveis, condicionais, laços, funções, listas, arrays e módulos.</p>
-                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
-                        <div style="width: 85%; height: 100%; background: #00ff66;"></div>
+            <div class="grid-competencias">
+                <div class="card-competencia">
+                    <div class="skill-icon text-green">🐍</div>
+                    <h3>Python</h3>
+                    <p>Variáveis, condicionais, laços, funções, listas, arrays e módulos.</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 85%;"></div>
                     </div>
                 </div>
-                <div class="card-atividade" style="min-height: auto; padding: 25px;">
-                    <div style="font-size: 24px; margin-bottom: 10px;">🧮</div>
-                    <h4 style="margin-top: 5px;">Lógica de Programação</h4>
-                    <p style="margin-bottom: 15px;">Fluxogramas, pseudocódigo e decomposição de problemas estruturados.</p>
-                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
-                        <div style="width: 80%; height: 100%; background: #00ff66;"></div>
+                <div class="card-competencia">
+                    <div class="skill-icon text-orange">🧮</div>
+                    <h3>Lógica de Programação</h3>
+                    <p>Fluxogramas, pseudocódigo, decomposição de problemas reais.</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 80%;"></div>
                     </div>
                 </div>
-                <div class="card-atividade" style="min-height: auto; padding: 25px;">
-                    <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
-                    <h4 style="margin-top: 5px;">Estruturas de Dados</h4>
-                    <p style="margin-bottom: 15px;">Vetores, listas, dicionários e operações complexas sobre coleções.</p>
-                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
-                        <div style="width: 75%; height: 100%; background: #00ff66;"></div>
+                <div class="card-competencia">
+                    <div class="skill-icon text-blue">📊</div>
+                    <h3>Estruturas de Dados</h3>
+                    <p>Vetores, listas, dicionários e operações complexas sobre coleções.</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 75%;"></div>
                     </div>
                 </div>
-                <div class="card-atividade" style="min-height: auto; padding: 25px;">
-                    <div style="font-size: 24px; margin-bottom: 10px;">🤖</div>
-                    <h4 style="margin-top: 5px;">IA & LLMs</h4>
-                    <p style="margin-bottom: 15px;">Uso de modelos de linguagem para geração e avaliação de exercícios.</p>
-                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
-                        <div style="width: 90%; height: 100%; background: #00ff66;"></div>
+                <div class="card-competencia">
+                    <div class="skill-icon text-purple">🤖</div>
+                    <h3>IA & LLMs</h3>
+                    <p>Uso de modelos de linguagem para geração e avaliação crítica de exercícios.</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 90%;"></div>
                     </div>
                 </div>
-                <div class="card-atividade" style="min-height: auto; padding: 25px;">
-                    <div style="font-size: 24px; margin-bottom: 10px;">⚙️</div>
-                    <h4 style="margin-top: 5px;">Engenharia Aplicada</h4>
-                    <p style="margin-bottom: 15px;">Modelagem e resolução de problemas analíticos com códigos funcionais.</p>
-                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
-                        <div style="width: 70%; height: 100%; background: #00ff66;"></div>
+                <div class="card-competencia">
+                    <div class="skill-icon text-pink">⚙️</div>
+                    <h3>Engenharia Aplicada</h3>
+                    <p>Modelagem e resolução de problemas analíticos de engenharia com código.</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 70%;"></div>
                     </div>
                 </div>
-                <div class="card-atividade" style="min-height: auto; padding: 25px;">
-                    <div style="font-size: 24px; margin-bottom: 10px;">🌐</div>
-                    <h4 style="margin-top: 5px;">Web & GitHub</h4>
-                    <p style="margin-bottom: 15px;">HTML, CSS, estruturação de portfólios locais e controle via Git.</p>
-                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
-                        <div style="width: 65%; height: 100%; background: #00ff66;"></div>
+                <div class="card-competencia">
+                    <div class="skill-icon text-cyan">🌐</div>
+                    <h3>Web & GitHub</h3>
+                    <p>HTML, CSS, estruturação de portfólios, Git e versionamento básico.</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 65%;"></div>
                     </div>
                 </div>
             </div>
