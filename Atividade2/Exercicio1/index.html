@@ -1,137 +1,171 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atividade 2 - Exercícios Resolvidos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --fundo: #0a0a0a;
-            --card-fundo: #121212;
-            --borda: #222222;
-            --texto-principal: #ffffff;
-            --texto-secundario: #888888;
-            --verde-neon: #00ff66;
-            --verde-glow: rgba(0, 255, 102, 0.15);
-        }
-        body {
-            background-color: var(--fundo);
-            color: var(--texto-principal);
-            font-family: 'Inter', sans-serif;
-            padding: 40px 20px;
-        }
-        .container { max-width: 1000px; margin: 0 auto; }
-        .btn-voltar { color: var(--texto-secundario); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 30px; transition: color 0.3s; }
-        .btn-voltar:hover { color: var(--verde-neon); }
-        
-        header { margin-bottom: 40px; border-bottom: 1px solid var(--borda); padding-bottom: 20px; }
-        header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 10px; }
-        header h1 span { color: var(--verde-neon); }
+Lista de exercícios: lógica de programação aplicada à engenharia elétrica
+Aluno:[Henrique da Silva Nunes
+Curso: Engenharia Elétrica 
+Matéria: Algoritmos e Lógica de Programação
 
-        /* GRADE DOS EXERCÍCIOS */
-        .grid-exercicios {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-        .card-ex {
-            background-color: var(--card-fundo);
-            border: 1px solid var(--borda);
-            border-radius: 6px;
-            padding: 25px;
-            text-decoration: none;
-            color: var(--texto-principal);
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .card-ex .num { font-family: 'Fira Code', monospace; color: var(--verde-neon); font-size: 0.85rem; }
-        .card-ex h3 { font-size: 1.1rem; font-weight: 600; }
-        .card-ex p { color: var(--texto-secundario); font-size: 0.85rem; }
-        
-        /* EFEITO HOVER VERDE NOS EXERCÍCIOS */
-        .card-ex:hover {
-            border-color: var(--verde-neon);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px var(--verde-glow);
-        }
-    </style>
-</head>
-<body>
+Exercício 01: Verificação de Tensão de Operação de Motores
+ Um motor trifásico opera em 380V. Escreva um algoritmo que leia a tensão medida e informe se o motor está recebendo a tensão nominal correta.
+Resolução:
+Plaintext
+INÍCIO
+    LER tensao
+    SE tensao == 380 ENTÃO
+        EXIBIR "Tensão Correta: Operação Segura."
+    SENÃO
+        EXIBIR "Tensão Incorreta: Risco de Danos ao Equipamento."
+FIM
+Exercício 02: Proteção de Circuito contra Sobrecarga
+ Um disjuntor de 20A protege um circuito. Crie uma lógica que verifique se a corrente medida ultrapassa o limite de projeto.
+Resolução:
+Plaintext
+INÍCIO
+    LER corrente
+    SE corrente > 20 ENTÃO
+        EXIBIR "Status: Disjuntor Desarmado por Sobrecarga."
+    SENÃO
+        EXIBIR "Status: Circuito Operando Dentro da Normalidade."
+FIM
+Exercício 03: Classificação de Baixa Tensão (NBR 5410) 
+A norma NBR 5410 define que tensões AC até 1000V são consideradas baixa tensão. Elabore um algoritmo para classificar uma leitura V.
+Resolução:
+Plaintext
+INÍCIO
+    LER V
+    SE V <= 1000 ENTÃO
+        EXIBIR "Classificação: Baixa Tensão."
+    SENÃO
+        EXIBIR "Classificação: Alta Tensão (Protocolos Especiais)."
+FIM
+Exercício 04: Teste de Continuidade em Condutores
+ Em um teste de bancada, se a resistência medida em um cabo for menor que 1 Ohm, o sistema indica continuidade elétrica.
+Resolução:
+Plaintext
+INÍCIO
+    LER resistencia
+    SE resistencia < 1 ENTÃO
+        EXIBIR "Resultado: Continuidade Detectada."
+    SENÃO
+        EXIBIR "Resultado: Circuito Aberto ou Falha."
+FIM
+Exercício 05: Limite de Queda de Tensão Admissível 
+Em circuitos de iluminação, a queda de tensão não deve exceder 4%. Verifique se o percentual calculado está dentro da norma.
+Resolução:
+Plaintext
+INÍCIO
+    LER queda_percentual
+    SE queda_percentual <= 4 ENTÃO
+        EXIBIR "Instalação em Conformidade com a Norma."
+    SENÃO
+        EXIBIR "Instalação Não Conforme: Redimensionar Condutor."
+FIM
+Exercício 06: Automação por Sensor de Presença
+ Um sistema de eficiência energética deve acionar a iluminação apenas quando houver detecção de movimento (representado por 1).
+Resolução:
+Plaintext
+INÍCIO
+    LER sensor_movimento
+    SE sensor_movimento == 1 ENTÃO
+        EXIBIR "Saída: Lâmpada Ativada."
+    SENÃO
+        EXIBIR "Saída: Lâmpada Desativada."
+FIM
+Exercício 07: Monitoramento do Fator de Potência
+ Uma unidade consumidora deve manter o Fator de Potência (FP) acima de 0,92. Crie um alerta para valores abaixo do permitido.
+Resolução:
+Plaintext
+INÍCIO
+    LER fp
+    SE fp >= 0.92 ENTÃO
+        EXIBIR "Eficiência: Fator de Potência Adequado."
+    SENÃO
+        EXIBIR "Alerta: Baixo FP. Acionar Banco de Capacitores."
+FIM
+Exercício 08: Resistência de Aterramento 
+Para um sistema de aterramento eficiente, a resistência deve ser menor ou igual a 10 Ohms.
+Resolução:
+Plaintext
+INÍCIO
+    LER res_aterramento
+    SE res_aterramento <= 10 ENTÃO
+        EXIBIR "Aterramento Adequado."
+    SENÃO
+        EXIBIR "Aterramento Inadequado: Tratar o Solo."
+FIM
+Exercício 09: Taxa de Ocupação de Eletrodutos (NBR 5410) 
+Para três ou mais condutores no mesmo conduto, a taxa de ocupação não deve ser superior a 40%.
+Resolução:
+Plaintext
+INÍCIO
+    LER taxa_ocupacao
+    SE taxa_ocupacao <= 40 ENTÃO
+        EXIBIR "Projeto Aprovado: Ocupação dentro do limite."
+    SENÃO
+        EXIBIR "Projeto Reprovado: Aumentar diâmetro do eletroduto."
+FIM
+Exercício 10: Seletividade de Proteção entre Disjuntores 
+O disjuntor geral (DG) deve ter uma corrente nominal superior ao disjuntor do circuito (DC) para garantir a seletividade.
+Resolução:
+Plaintext
+INÍCIO
+    LER DG, DC
+    SE DG > DC ENTÃO
+        EXIBIR "Seletividade Atendida."
+    SENÃO
+        EXIBIR "Erro de Coordenação: Verificar Disjuntores."
+FIM
+Exercício 11: Identificação Normatizada de Condutores 
+Crie uma lógica para identificar se o condutor em uso é o Neutro com base na cor Azul (conforme NBR 5410).
+Resolução:
+Plaintext
+INÍCIO
+    LER cor_cabo
+    SE cor_cabo == "Azul" ENTÃO
+        EXIBIR "Condutor Neutro Identificado."
+    SENÃO
+        EXIBIR "Atenção: Verificar Função do Condutor."
+FIM
+Exercício 12: Partida de Motores (Limite de Potência) 
+Motores acima de 5 CV não devem utilizar partida direta. Verifique a necessidade de partida suave.
+Resolução:
+Plaintext
+INÍCIO
+    LER cv_motor
+    SE cv_motor <= 5 ENTÃO
+        EXIBIR "Partida Direta Autorizada."
+    SENÃO
+        EXIBIR "Uso Obrigatório de Partida Indireta."
+FIM
+Exercício 13: Tensão de Segurança em Locais Úmidos
+ A tensão de segurança em locais molhados deve ser de no máximo 25V AC. Verifique a segurança.
+Resolução:
+Plaintext
+INÍCIO
+    LER v_local
+    SE v_local <= 25 ENTÃO
+        EXIBIR "Ambiente Seguro para Operação."
+    SENÃO
+        EXIBIR "Perigo: Risco de Choque Elétrico Elevado."
+FIM
+Exercício 14: Verificação de Sobretensão na Rede 
+Considerando uma rede nominal de 220V, um desvio superior a 10% (242V) é prejudicial.
+Resolução:
+Plaintext
+INÍCIO
+    LER v_medida
+    SE v_medida > 242 ENTÃO
+        EXIBIR "Alerta: Sobretensão Detectada."
+    SENÃO
+        EXIBIR "Rede Operando em Níveis Estáveis."
+FIM
+Exercício 15: Status de Carga de Baterias (Nobreak)
+ Um sistema de UPS deve emitir um alerta se a carga da bateria estiver abaixo de 20%.
+Resolução:
+Plaintext
+INÍCIO
+    LER carga_bateria
+    SE carga_bateria < 20 ENTÃO
+        EXIBIR "Alerta: Bateria Crítica."
+    SENÃO
+        EXIBIR "Sistema Operacional: Carga Suficiente."
+FIM
 
-    <div class="container">
-        <a href="../index.html" class="btn-voltar">← Voltar para o Portfólio</a>
-
-        <header>
-            <h1>Atividade 02<span>.</span></h1>
-            <p style="color: var(--texto-secundario);">Selecione um dos exercícios abaixo para abrir a documentação direta no Google Docs.</p>
-        </header>
-
-        <div class="grid-exercicios">
-            <a href="https://docs.google.com/document/d/1T3mgHJU8RuAcERuRXAc-W04eIlWqEIe90iv86jw_6Xg/edit?usp=sharing" target="_blank" class="card-ex">
-                <div class="num">EX-01</div>
-                <h3>Exercício 1</h3>
-                <p>Clique para abrir o documento com a resolução.</p>
-            </a>
-
-            <a href="#" id="link-ex2" class="card-ex">
-                <div class="num">EX-02</div>
-                <h3>Exercício 2</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex3" class="card-ex">
-                <div class="num">EX-03</div>
-                <h3>Exercício 3</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex4" class="card-ex">
-                <div class="num">EX-04</div>
-                <h3>Exercício 4</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex5" class="card-ex">
-                <div class="num">EX-05</div>
-                <h3>Exercício 5</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex6" class="card-ex">
-                <div class="num">EX-06</div>
-                <h3>Exercício 6</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex7" class="card-ex">
-                <div class="num">EX-07</div>
-                <h3>Exercício 7</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex8" class="card-ex">
-                <div class="num">EX-08</div>
-                <h3>Exercício 8</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex9" class="card-ex">
-                <div class="num">EX-09</div>
-                <h3>Exercício 9</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" id="link-ex10" class="card-ex">
-                <div class="num">EX-10</div>
-                <h3>Exercício 10</h3>
-                <p>Aguardando link...</p>
-            </a>
-        </div>
-    </div>
-
-</body>
-</html>

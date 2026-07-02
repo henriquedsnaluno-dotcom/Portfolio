@@ -1,0 +1,17 @@
+﻿# Programa para verificar a divisibilidade de um número inteiro
+numero = int(input("Digite um número inteiro: "))
+
+
+# Verifica divisibilidade
+divisivel_por_2 = (numero % 2 == 0)
+divisivel_por_3 = (numero % 3 == 0)
+
+
+if divisivel_por_2 and divisivel_por_3:
+    print(f"{numero} é divisível por 2 e por 3.")
+elif divisivel_por_2:
+    print(f"{numero} é divisível por 2.")
+elif divisivel_por_3:
+    print(f"{numero} é divisível por 3.")
+else:
+    print(f"{numero} não é divisível nem por 2 nem por 3.")

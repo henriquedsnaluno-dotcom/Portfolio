@@ -1,0 +1,137 @@
+﻿Lista de 10 Exercícios gerado pela LLM: Grok
+1. Um técnico está testando um circuito alimentado por uma fonte de 12V e precisa saber quanto de potência está sendo consumido por uma carga. Escreva um programa que leia a tensão e a corrente de um componente e calcule a potência dissipada usando a fórmula P = V × I.
+2. Ao montar um protótipo, você mede os resistores para garantir que estejam dentro da tolerância especificada pelo fabricante. Leia o valor nominal, a tolerância (%) e o valor medido de um resistor. Informe se ele está dentro ou fora da tolerância.
+3. Na bancada de laboratório é comum trabalhar com múltiplos de unidades (milivolts, microamperes, kiloohms). Crie um conversor que transforme mV → V, µA → A e kΩ → Ω conforme a escolha do usuário.
+4. Você conectou vários resistores em série para limitar a corrente em um circuito de potência. Leia a quantidade de resistores e seus valores, depois calcule a resistência equivalente total em série.
+5. Você vai acender um LED em um circuito de 5V ou 9V e precisa escolher o resistor de proteção correto. Calcule o valor do resistor limitador para um LED, considerando tensão da fonte, tensão do LED e corrente desejada.
+6. Durante testes em laboratório, frequentemente falta um dos valores da Lei de Ohm. Permita que o usuário escolha qual grandeza calcular (Tensão, Corrente ou Resistência) e forneça as outras duas.
+7. Você está projetando um dispositivo portátil alimentado por bateria e precisa estimar sua duração. Calcule o tempo aproximado de funcionamento de uma bateria com base na capacidade e no consumo do circuito.
+8. Em projetos com osciladores, timers e sinais senoidais é essencial converter entre frequência e período. Crie um programa que converta Frequência para Período e vice-versa.
+9. Você precisa reduzir a tensão de 12V para 5V para alimentar um sensor usando um divisor resistivo. Leia os valores de R1, R2 e a tensão de entrada. Calcule a tensão de saída no divisor.
+10. Após medir uma tensão com o multímetro, é importante identificar rapidamente em qual tipo de circuito você está trabalhando. Leia uma tensão e classifique o nível do sinal (sinal fraco, TTL, automação, rede elétrica, etc).
+
+
+
+
+Códigos em Python:
+
+
+1. print("=== Cálculo de Potência Elétrica ===")
+v = float(input("Digite a tensão (V): "))
+i = float(input("Digite a corrente (A): "))
+
+
+p = v * i
+2: 
+print(f"Potência dissipada = {p:.2f} Watts")
+print("=== Verificador de Tolerância de Resistor ===")
+nominal = float(input("Valor nominal do resistor (Ω): "))
+tolerancia = float(input("Tolerância (%): "))
+medido = float(input("Valor medido (Ω): "))
+
+
+minimo = nominal * (1 - tolerancia/100)
+maximo = nominal * (1 + tolerancia/100)
+
+
+if minimo <= medido <= maximo:
+    print("✅ Resistor DENTRO da tolerância")
+else:
+    print("❌ Resistor FORA da tolerância")
+3: 
+print("=== Conversor de Unidades Elétricas ===")
+print("1: mV → V    2: µA → A    3: kΩ → Ω")
+op = int(input("Escolha a conversão: "))
+if op == 1:
+    mv = float(input("Valor em mV: "))
+    print(f"{mv/1000:.4f} V")
+elif op == 2:
+    ua = float(input("Valor em µA: "))
+    print(f"{ua/1_000_000:.7f} A")
+elif op == 3:
+    ko = float(input("Valor em kΩ: "))
+    print(f"{ko*1000:.1f} Ω")
+else:
+    print("Opção inválida!")
+4: 
+print("=== Resistência Equivalente em Série ===")
+n = int(input("Quantos resistores em série? "))
+total = 0
+
+
+for i in range(n):
+    r = float(input(f"Resistor {i+1} (Ω): "))
+    total += r
+
+
+print(f"Resistência equivalente = {total:.2f} Ω")
+5: 
+print("=== Dimensionamento de Resistor para LED ===")
+v_fonte = float(input("Tensão da fonte (V): "))
+v_led = float(input("Tensão do LED (V): "))
+i_led = float(input("Corrente do LED (mA): ")) / 1000
+
+
+r = (v_fonte - v_led) / i_led
+print(f"Resistor necessário ≈ {r:.1f} Ω")
+6: print("=== Lei de Ohm - Grandeza Faltante ===")
+print("1: Calcular Tensão (V)   2: Calcular Corrente (I)   3: Calcular Resistência (R)")
+op = int(input("Escolha: "))
+
+
+if op == 1:
+    i = float(input("Corrente (A): "))
+    r = float(input("Resistência (Ω): "))
+    print(f"Tensão = {i*r:.3f} V")
+elif op == 2:
+    v = float(input("Tensão (V): "))
+    r = float(input("Resistência (Ω): "))
+    print(f"Corrente = {v/r:.4f} A")
+else:
+    v = float(input("Tensão (V): "))
+    i = float(input("Corrente (A): "))
+    print(f"Resistência = {v/i:.2f} Ω")
+7:
+ print("=== Tempo de Autonomia de Bateria ===")
+capacidade = float(input("Capacidade da bateria (mAh): "))
+consumo = float(input("Consumo do circuito (mA): "))
+
+
+tempo = capacidade / consumo
+print(f"Tempo de funcionamento ≈ {tempo:.1f} horas")
+print(f"≈ {tempo/24:.1f} dias")
+8: 
+print("=== Conversor Frequência ↔ Período ===")
+print("1: Frequência (Hz) → Período    2: Período (s) → Frequência")
+op = int(input("Escolha: "))
+
+
+if op == 1:
+    f = float(input("Frequência (Hz): "))
+    print(f"Período = {1/f:.6f} s")
+else:
+    t = float(input("Período (s): "))
+    print(f"Frequência = {1/t:.2f} Hz")
+9:
+ print("=== Divisor de Tensão ===")
+r1 = float(input("Valor de R1 (Ω): "))
+r2 = float(input("Valor de R2 (Ω): "))
+vin = float(input("Tensão de entrada (V): "))
+
+
+vout = vin * r2 / (r1 + r2)
+print(f"Tensão de saída = {vout:.3f} V")
+10: print("=== Classificador de Nível de Tensão ===")
+v = float(input("Tensão medida (V): "))
+
+
+if v < 1.0:
+    print("🔹 Nível: Sinal fraco / Analógico baixo")
+elif v < 5.0:
+    print("🔹 Nível: TTL / Arduino / Microcontrolador")
+elif v < 12.0:
+    print("🔹 Nível: Automação / Sensores / 12V")
+elif v <= 220:
+    print("⚠️  Nível: Rede elétrica residencial (Cuidado!)")
+else:
+    print("❗ Nível: Alta tensão - Perigoso!")

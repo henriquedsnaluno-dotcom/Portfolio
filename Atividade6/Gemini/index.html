@@ -1,0 +1,224 @@
+﻿import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+
+def resolver_gauss_manual(A, B_vetor):
+    """
+    Resolve o sistema linear A * X = B usando Eliminação de Gauss com Pivoteamento Parcial.
+    Implementação puramente manual, sem uso de np.linalg.solve.
+    """
+    n = len(B_vetor)
+    # Criar matriz aumentada
+    M = np.zeros((n, n + 1), dtype=float)
+    for i in range(n):
+        for j in range(n):
+            M[i, j] = A[i, j]
+        M[i, n] = B_vetor[i]
+   
+    # Eliminação para frente
+    for i in range(n):
+        # Pivoteamento parcial
+        max_el = abs(M[i, i])
+        max_row = i
+        for k in range(i + 1, n):
+            if abs(M[k, i]) > max_el:
+                max_el = abs(M[k, i])
+                max_row = k
+       
+        # Troca de linhas se necessário
+        if max_row != i:
+            M[[i, max_row]] = M[[max_row, i]]
+           
+        if abs(M[i, i]) < 1e-9:
+            raise ValueError("O sistema linear é singular ou indeterminado (Treliça hipostática).")
+           
+        # Zerar elementos abaixo do pivô
+        for k in range(i + 1, n):
+            c = -M[k, i] / M[i, i]
+            M[k, i:] += c * M[i, i:]
+           
+    # Substituição para trás
+    x = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        x[i] = M[i, n] / M[i, i]
+        for k in range(i - 1, -1, -1):
+            M[k, n] -= M[k, i] * x[i]
+           
+    return x
+
+
+def analisar_trelica(N, x, y, B, barras, Fx, Fy, apoios):
+    """
+    Monta e resolve o sistema de equações da treliça.
+    Apoios: 'fixo' (restringe X e Y), 'movel' (restringe Y), 'livre' (sem restrição).
+    """
+    num_eq = 2 * N
+    A = np.zeros((num_eq, num_eq))
+    R_vetor = np.zeros(num_eq)
+   
+    # Mapeamento de reações de apoio no vetor de incógnitas (posições após as B barras)
+    idx_reacao = B
+    mapa_apoios = {} # nó: (incognita_x, incognita_y)
+   
+    for i in range(N):
+        rx, ry = None, None
+        if apoios[i] == 'fixo':
+            rx = idx_reacao; idx_reacao += 1
+            ry = idx_reacao; idx_reacao += 1
+        elif apoios[i] == 'movel':
+            ry = idx_reacao; idx_reacao += 1
+        mapa_apoios[i] = (rx, ry)
+       
+    if idx_reacao != num_eq:
+        print(f"Aviso: Graus de restrição ({idx_reacao - B}) + Barras ({B}) != 2N ({num_eq}).")
+       
+    # Montagem da matriz A e vetor R
+    for b in range(B):
+        n1, n2 = barras[b]
+        dx = x[n2] - x[n1]
+        dy = y[n2] - y[n1]
+        L = math.sqrt(dx**2 + dy**2)
+        cos_t = dx / L
+        sin_t = dy / L
+       
+        # Nó 1 (Saindo do nó 1 em direção ao nó 2)
+        A[2 * n1, b] = cos_t
+        A[2 * n1 + 1, b] = sin_t
+       
+        # Nó 2 (Saindo do nó 2 em direção ao nó 1)
+        A[2 * n2, b] = -cos_t
+        A[2 * n2 + 1, b] = -sin_t
+       
+    # Inserir reações de apoio na matriz A
+    for i in range(N):
+        rx, ry = mapa_apoios[i]
+        if rx is not None:
+            A[2 * i, rx] = 1.0
+        if ry is not None:
+            A[2 * i + 1, ry] = 1.0
+           
+    # Vetor de forças externas (invertido para o lado direito da igualdade: F_externo)
+    for i in range(N):
+        R_vetor[2 * i] = Fx[i]
+        R_vetor[2 * i + 1] = Fy[i]
+       
+    # Resolver por Gauss Manual
+    X = resolver_gauss_manual(A, R_vetor)
+   
+    forcas_barras = X[:B]
+    reacoes = X[B:]
+   
+    return forcas_barras, reacoes
+
+
+def gerar_graficos(N, x, y, B, barras, forcas_barras, apoios):
+    # Configurações de cores para o mapa de calor
+    max_f = max(abs(forcas_barras)) if max(abs(forcas_barras)) > 0 else 1.0
+   
+    plt.figure(figsize=(15, 10))
+   
+    # 1. Desenho da Treliça Original
+    plt.subplot(2, 2, 1)
+    for b in range(B):
+        n1, n2 = barras[b]
+        plt.plot([x[n1], x[n2]], [y[n1], y[n2]], 'k--', alpha=0.5)
+    for i in range(N):
+        plt.scatter(x[i], y[i], color='blue', zorder=5)
+        plt.text(x[i]+0.1, y[i]+0.1, f'{i}', fontsize=12, color='darkblue', weight='bold')
+        if apoios[i] != 'livre':
+            plt.plot(x[i], y[i], '^' if apoios[i] == 'fixo' else 'o', color='black', markersize=10)
+    plt.title("Treliça Original (Nós e Apoios)")
+    plt.grid(True)
+   
+    # 2. Treliça Deformada / Mapa de Calor
+    plt.subplot(2, 2, 2)
+    for b in range(B):
+        n1, n2 = barras[b]
+        f = forcas_barras[b]
+        # Normalização simples para cor (Vermelho=Compressão (-), Azul=Tração (+))
+        if f > 1e-3:
+            cor = (0, 0, min(1.0, f/max_f)) # Tons de Azul
+        elif f < -1e-3:
+            cor = (min(1.0, abs(f)/max_f), 0, 0) # Tons de Vermelho
+        else:
+            cor = (0.5, 0.5, 0.5) # Cinza para elemento nulo
+           
+        plt.plot([x[n1], x[n2]], [y[n1], y[n2]], color=cor, linewidth=3)
+   
+    for i in range(N):
+        plt.scatter(x[i], y[i], color='black', zorder=5)
+    plt.title("Mapa de Calor de Forças Auxiliares\n(Azul = Tração | Vermelho = Compressão)")
+    plt.grid(True)
+   
+    # 3. Gráfico de Barras (Magnitude das Forças)
+    plt.subplot(2, 2, 3)
+    indices = [f"B{i}" for i in range(B)]
+    cores_barras = ['blue' if f >= 0 else 'red' for f in forcas_barras]
+    plt.bar(indices, forcas_barras, color=cores_barras)
+    plt.axhline(0, color='black', linewidth=0.8)
+    plt.ylabel('Força (N)')
+    plt.title('Força por Elemento de Barra')
+    plt.grid(True, axis='y')
+   
+    # 4. Histograma da Distribuição de Forças
+    plt.subplot(2, 2, 4)
+    plt.hist(forcas_barras, bins=10, color='purple', edgecolor='black', alpha=0.7)
+    plt.xlabel('Força (N)')
+    plt.ylabel('Frequência')
+    plt.title('Distribuição das Forças Internas')
+    plt.grid(True)
+   
+    plt.tight_layout()
+    plt.show()
+
+
+# --- Caso de Teste Padronizado: Treliça Warren (N=4, B=5) ---
+if __name__ == "__main__":
+    # Configuração geométrica da Treliça Warren de 4 nós
+    N = 4
+    x = [0.0, 2.0, 4.0, 2.0]
+    y = [0.0, 0.0, 0.0, 1.732] # Altura correspondente a triângulo equilátero (base 2)
+   
+    B = 5
+    barras = [(0, 1), (1, 2), (0, 3), (1, 3), (2, 3)]
+   
+    # Cargas (1000N para baixo no nó central inferior/nó 1)
+    Fx = [0.0, 0.0, 0.0, 0.0]
+    Fy = [0.0, -1000.0, 0.0, 0.0]
+   
+    # Vinculação dos apoios
+    apoios = ['fixo', 'livre', 'movel', 'livre']
+   
+    # Execução do modelo
+    forcas, reacoes = analisar_trelica(N, x, y, B, barras, Fx, Fy, apoios)
+   
+    # Exibição de Resultados e Estatísticas
+    print("--- RESULTADOS DA ANÁLISE ---")
+    for b in range(B):
+        tipo = "Tração (+)" if forcas[b] > 1e-3 else ("Compressão (-)" if forcas[b] < -1e-3 else "Nula")
+        print(f"Barra {b} ({barras[b][0]}-{barras[b][1]}): {forcas[b]:.2f} N [{tipo}]")
+       
+    print("\n--- ESTATÍSTICAS ---")
+    abs_forcas = [abs(f) for f in forcas]
+    idx_max = abs_forcas.index(max(abs_forcas))
+    print(f"Barra mais solicitada: Barra {idx_max} com {forcas[idx_max]:.2f} N")
+    print(f"Força média linear absoluta nas barras: {np.mean(abs_forcas):.2f} N")
+    print(f"Somatório absoluto das reações externas de apoio: {np.sum(np.abs(reacoes)):.2f} N")
+
+
+    # Renderização Gráfica
+    gerar_graficos(N, x, y, B, barras, forcas, apoios)
+   
+--- RESULTADOS DA ANÁLISE ---
+Barra 0 (0-1): -577.37 N [Compressão (-)]
+Barra 1 (1-2): -577.37 N [Compressão (-)]
+Barra 2 (0-3): 763.78 N [Tração (+)]
+Barra 3 (1-3): -1000.00 N [Compressão (-)]
+Barra 4 (2-3): 763.78 N [Tração (+)]
+
+
+--- ESTATÍSTICAS ---
+Barra mais solicitada: Barra 3 com -1000.00 N
+Força média linear absoluta nas barras: 736.46 N
+Somatório absoluto das reações externas de apoio: 1000.00 N

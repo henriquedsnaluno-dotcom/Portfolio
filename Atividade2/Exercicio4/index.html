@@ -1,137 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atividade 2 - Exercícios Resolvidos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --fundo: #0a0a0a;
-            --card-fundo: #121212;
-            --borda: #222222;
-            --texto-principal: #ffffff;
-            --texto-secundario: #888888;
-            --verde-neon: #00ff66;
-            --verde-glow: rgba(0, 255, 102, 0.15);
-        }
-        body {
-            background-color: var(--fundo);
-            color: var(--texto-principal);
-            font-family: 'Inter', sans-serif;
-            padding: 40px 20px;
-        }
-        .container { max-width: 1000px; margin: 0 auto; }
-        .btn-voltar { color: var(--texto-secundario); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 30px; transition: color 0.3s; }
-        .btn-voltar:hover { color: var(--verde-neon); }
-        
-        header { margin-bottom: 40px; border-bottom: 1px solid var(--borda); padding-bottom: 20px; }
-        header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 10px; }
-        header h1 span { color: var(--verde-neon); }
+﻿import math
 
-        /* GRADE DOS EXERCÍCIOS */
-        .grid-exercicios {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-        .card-ex {
-            background-color: var(--card-fundo);
-            border: 1px solid var(--borda);
-            border-radius: 6px;
-            padding: 25px;
-            text-decoration: none;
-            color: var(--texto-principal);
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .card-ex .num { font-family: 'Fira Code', monospace; color: var(--verde-neon); font-size: 0.85rem; }
-        .card-ex h3 { font-size: 1.1rem; font-weight: 600; }
-        .card-ex p { color: var(--texto-secundario); font-size: 0.85rem; }
-        
-        /* EFEITO HOVER VERDE NOS EXERCÍCIOS */
-        .card-ex:hover {
-            border-color: var(--verde-neon);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px var(--verde-glow);
-        }
-    </style>
-</head>
-<body>
 
-    <div class="container">
-        <a href="../index.html" class="btn-voltar">← Voltar para o Portfólio</a>
+# Lê o diâmetro em polegadas
+diametro_polegadas = float(input("Digite o diâmetro do duto em polegadas: "))
 
-        <header>
-            <h1>Atividade 02<span>.</span></h1>
-            <p style="color: var(--texto-secundario);">Selecione um dos exercícios abaixo para abrir a documentação direta no Google Docs.</p>
-        </header>
 
-        <div class="grid-exercicios">
-            <a href="https://docs.google.com/document/d/1T3mgHJU8RuAcERuRXAc-W04eIlWqEIe90iv86jw_6Xg/edit?usp=sharing" target="_blank" class="card-ex">
-                <div class="num">EX-01</div>
-                <h3>Exercício 1</h3>
-                <p>Clique para abrir o documento com a resolução.</p>
-            </a>
+# Converte para milímetros
+diametro_mm = diametro_polegadas * 25.4
 
-            <a href="https://docs.google.com/document/d/1mvNofKoB7C_JnCPGaK_UXe4TYWkQmjUdrAV55-dAEnk/edit?usp=sharing" target="_blank" class="card-ex">
-                <div class="num">EX-02</div>
-                <h3>Exercício 2</h3>
-                <p>Clique para abrir o documento com a resolução.</p>
-            </a>
 
-            <a href="https://docs.google.com/document/d/1xdzWIM3Z4sZMcS984MyWnokAGsrjJ9Rm7w78UsBbAcA/edit?usp=sharing" target="_blank" class="card-ex">
-                <div class="num">EX-03</div>
-                <h3>Exercício 3</h3>
-                <p>Clique para abrir o documento com a resolução.</p>
-            </a>
+# Calcula a área da seção transversal (A = π * r²)
+raio_mm = diametro_mm / 2
+area_mm2 = math.pi * (raio_mm ** 2)
 
-            <a href="https://docs.google.com/document/d/1Ll5ICftnCv68ocG-PLRThax83APbfQdO8NKmEp0qhCM/edit?usp=sharing" target="_blank" class="card-ex">
-                <div class="num">EX-04</div>
-                <h3>Exercício 4</h3>
-                <p>Clique para abrir o documento com a resolução.</p>
-            </a>
 
-            <a href="#" class="card-ex">
-                <div class="num">EX-05</div>
-                <h3>Exercício 5</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" class="card-ex">
-                <div class="num">EX-06</div>
-                <h3>Exercício 6</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" class="card-ex">
-                <div class="num">EX-07</div>
-                <h3>Exercício 7</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" class="card-ex">
-                <div class="num">EX-08</div>
-                <h3>Exercício 8</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" class="card-ex">
-                <div class="num">EX-09</div>
-                <h3>Exercício 9</h3>
-                <p>Aguardando link...</p>
-            </a>
-
-            <a href="#" class="card-ex">
-                <div class="num">EX-10</div>
-                <h3>Exercício 10</h3>
-                <p>Aguardando link...</p>
-            </a>
-        </div>
-    </div>
-
-</body>
-</html>
+# Exibe os resultados
+print(f"Diâmetro em milímetros: {diametro_mm:.2f} mm")
+print(f"Área da seção transversal: {area_mm2:.2f} mm²")

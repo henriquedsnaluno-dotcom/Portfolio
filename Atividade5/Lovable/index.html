@@ -1,0 +1,274 @@
+﻿"""
+Análise de Estabilidade e Custo em Sistemas de Abastecimento de Água
+Simulação de 7 dias consecutivos com variação aleatória de demanda (±20%)
+"""
+
+
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+# ---------- Funções de validação ----------
+def ler_float(msg, minimo=0.0, permitir_zero=False):
+    while True:
+        try:
+            v = float(input(msg).replace(",", "."))
+            if v < minimo or (not permitir_zero and v == 0):
+                print(f"  Valor inválido. Informe um número > {minimo}.")
+                continue
+            return v
+        except ValueError:
+            print("  Entrada inválida. Digite um número.")
+
+
+def ler_int(msg, minimo=1):
+    while True:
+        try:
+            v = int(input(msg))
+            if v < minimo:
+                print(f"  Informe um inteiro >= {minimo}.")
+                continue
+            return v
+        except ValueError:
+            print("  Entrada inválida. Digite um inteiro.")
+
+
+# ---------- Classificação de risco ----------
+def classificar_risco(autonomia):
+    if autonomia > 3:
+        return "Baixo"
+    elif autonomia >= 1:
+        return "Médio"
+    else:
+        return "Alto"
+
+
+# ---------- Entrada de dados ----------
+def entrada_dados():
+    n = ler_int("Quantos bairros serão analisados? ", 1)
+    bairros = []
+    for i in range(n):
+        print(f"\n--- Bairro {i+1} ---")
+        nome = input("Nome do bairro: ").strip() or f"Bairro {i+1}"
+        demanda   = ler_float("Demanda diária (m³): ")
+        capac     = ler_float("Capacidade do reservatório (m³): ")
+        volume    = ler_float("Volume inicial disponível (m³): ", permitir_zero=True)
+        perda_pct = ler_float("Percentual de perda na tubulação (%): ", permitir_zero=True)
+        custo     = ler_float("Custo de bombeamento por m³ (R$): ", permitir_zero=True)
+        bairros.append({
+            "nome": nome, "demanda": demanda, "capacidade": capac,
+            "volume": min(volume, capac), "perda": perda_pct/100, "custo": custo
+        })
+    return bairros
+
+
+# ---------- Cálculos de um dia ----------
+def calcular_dia(b, demanda_dia):
+    entregue = demanda_dia * (1 - b["perda"])
+    perdido  = demanda_dia * b["perda"]
+    custo    = demanda_dia * b["custo"]
+    autonomia = b["volume"] / demanda_dia if demanda_dia > 0 else float("inf")
+    risco = classificar_risco(autonomia)
+    return entregue, perdido, custo, autonomia, risco
+
+
+# ---------- Simulação 7 dias ----------
+def simular(bairros, dias=7, variacao=0.20):
+    historico_volumes = {b["nome"]: [b["volume"]] for b in bairros}
+    eventos_criticos = []
+    custo_total = 0.0
+
+
+    print("\n" + "="*70)
+    print(f"SIMULAÇÃO DE {dias} DIAS")
+    print("="*70)
+
+
+    for dia in range(1, dias+1):
+        print(f"\n--- Dia {dia} ---")
+        print(f"{'Bairro':<15}{'Dem.(m³)':>10}{'Vol.fim':>10}{'Custo R$':>12}{'Auton.':>9}{'Risco':>8}")
+        for b in bairros:
+            fator = 1 + random.uniform(-variacao, variacao)
+            dem_dia = b["demanda"] * fator
+            consumo = min(dem_dia, b["volume"])  # não consome além do disponível
+            entregue, perdido, custo, autonomia, risco = calcular_dia(b, dem_dia)
+            b["volume"] = max(0.0, b["volume"] - consumo)
+            custo_total += custo
+            historico_volumes[b["nome"]].append(b["volume"])
+
+
+            print(f"{b['nome']:<15}{dem_dia:>10.2f}{b['volume']:>10.2f}"
+                  f"{custo:>12.2f}{autonomia:>9.2f}{risco:>8}")
+
+
+            if risco == "Alto" or b["volume"] == 0:
+                eventos_criticos.append((dia, b["nome"], risco, b["volume"]))
+
+
+    return historico_volumes, eventos_criticos, custo_total
+
+
+# ---------- Relatório final ----------
+def relatorio(historico, criticos, custo_total):
+    print("\n" + "="*70)
+    print("RELATÓRIO FINAL")
+    print("="*70)
+    print(f"Custo total acumulado de bombeamento: R$ {custo_total:,.2f}")
+
+
+    if criticos:
+        print("\nEventos críticos detectados:")
+        for dia, nome, risco, vol in criticos:
+            print(f"  Dia {dia} - {nome}: risco {risco} (volume {vol:.2f} m³)")
+        # bairro mais crítico = mais ocorrências
+        contagem = {}
+        for _, nome, _, _ in criticos:
+            contagem[nome] = contagem.get(nome, 0) + 1
+        pior = max(contagem, key=contagem.get)
+        print(f"\nBairro mais crítico: {pior} ({contagem[pior]} ocorrências)")
+    else:
+        print("\nNenhum bairro entrou em situação crítica.")
+
+
+# ---------- Gráfico de evolução ----------
+def grafico_evolucao(historico, dias=7):
+    plt.figure(figsize=(10, 6))
+    x = np.arange(0, dias+1)
+    for nome, vols in historico.items():
+        plt.plot(x, vols, marker="o", linewidth=2, label=nome)
+    plt.title("Evolução do Volume dos Reservatórios em 7 Dias")
+    plt.xlabel("Dia")
+    plt.ylabel("Volume disponível (m³)")
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+
+# ---------- Programa principal ----------
+def main():
+    print("=== Simulação de Abastecimento de Água - 7 dias ===\n")
+    bairros = entrada_dados()
+    historico, criticos, custo_total = simular(bairros, dias=7, variacao=0.20)
+    relatorio(historico, criticos, custo_total)
+    grafico_evolucao(historico, dias=7)
+
+
+if __name__ == "__main__":
+    main()
+
+
+3
+=== Simulação de Abastecimento de Água - 7 dias ===
+
+
+Quantos bairros serão analisados? 3
+
+
+--- Bairro 1 ---
+Nome do bairro: Vila Miranda
+Demanda diária (m³): 380
+Capacidade do reservatório (m³): 1200
+Volume inicial disponível (m³): 900
+Percentual de perda na tubulação (%): 14
+Custo de bombeamento por m³ (R$): 1.20
+
+
+--- Bairro 2 ---
+Nome do bairro: Boa Vista
+Demanda diária (m³): 220
+Capacidade do reservatório (m³): 700
+Volume inicial disponível (m³): 550
+Percentual de perda na tubulação (%): 22
+Custo de bombeamento por m³ (R$): 1.60
+
+
+--- Bairro 3 ---
+Nome do bairro: Itaquera
+Demanda diária (m³): 600
+Capacidade do reservatório (m³): 2000,
+Volume inicial disponível (m³): 1400
+Percentual de perda na tubulação (%): 16
+Custo de bombeamento por m³ (R$): 1.15
+
+
+======================================================================
+SIMULAÇÃO DE 7 DIAS
+======================================================================
+
+
+--- Dia 1 ---
+Bairro           Dem.(m³)   Vol.fim    Custo R$   Auton.   Risco
+Vila Miranda       356.97    543.03      428.36     2.52   Médio
+Boa Vista          203.13    346.87      325.01     2.71   Médio
+Itaquera           714.69    685.31      821.90     1.96   Médio
+
+
+--- Dia 2 ---
+Bairro           Dem.(m³)   Vol.fim    Custo R$   Auton.   Risco
+Vila Miranda       389.65    153.38      467.58     1.39   Médio
+Boa Vista          211.52    135.35      338.43     1.64   Médio
+Itaquera           637.95     47.35      733.64     1.07   Médio
+
+
+--- Dia 3 ---
+Bairro           Dem.(m³)   Vol.fim    Custo R$   Auton.   Risco
+Vila Miranda       392.69      0.00      471.23     0.39    Alto
+Boa Vista          228.35      0.00      365.36     0.59    Alto
+Itaquera           556.82      0.00      640.34     0.09    Alto
+
+
+--- Dia 4 ---
+Bairro           Dem.(m³)   Vol.fim    Custo R$   Auton.   Risco
+Vila Miranda       305.83      0.00      366.99     0.00    Alto
+Boa Vista          255.65      0.00      409.03     0.00    Alto
+Itaquera           642.09      0.00      738.40     0.00    Alto
+
+
+--- Dia 5 ---
+Bairro           Dem.(m³)   Vol.fim    Custo R$   Auton.   Risco
+Vila Miranda       373.45      0.00      448.13     0.00    Alto
+Boa Vista          261.75      0.00      418.80     0.00    Alto
+Itaquera           581.72      0.00      668.98     0.00    Alto
+
+
+--- Dia 6 ---
+Bairro           Dem.(m³)   Vol.fim    Custo R$   Auton.   Risco
+Vila Miranda       420.85      0.00      505.02     0.00    Alto
+Boa Vista          228.79      0.00      366.06     0.00    Alto
+Itaquera           689.98      0.00      793.48     0.00    Alto
+
+
+--- Dia 7 ---
+Bairro           Dem.(m³)   Vol.fim    Custo R$   Auton.   Risco
+Vila Miranda       369.73      0.00      443.67     0.00    Alto
+Boa Vista          189.81      0.00      303.70     0.00    Alto
+Itaquera           553.91      0.00      636.99     0.00    Alto
+
+
+======================================================================
+RELATÓRIO FINAL
+======================================================================
+Custo total acumulado de bombeamento: R$ 10,691.14
+
+
+Eventos críticos detectados:
+  Dia 3 - Vila Miranda: risco Alto (volume 0.00 m³)
+  Dia 3 - Boa Vista: risco Alto (volume 0.00 m³)
+  Dia 3 - Itaquera: risco Alto (volume 0.00 m³)
+  Dia 4 - Vila Miranda: risco Alto (volume 0.00 m³)
+  Dia 4 - Boa Vista: risco Alto (volume 0.00 m³)
+  Dia 4 - Itaquera: risco Alto (volume 0.00 m³)
+  Dia 5 - Vila Miranda: risco Alto (volume 0.00 m³)
+  Dia 5 - Boa Vista: risco Alto (volume 0.00 m³)
+  Dia 5 - Itaquera: risco Alto (volume 0.00 m³)
+  Dia 6 - Vila Miranda: risco Alto (volume 0.00 m³)
+  Dia 6 - Boa Vista: risco Alto (volume 0.00 m³)
+  Dia 6 - Itaquera: risco Alto (volume 0.00 m³)
+  Dia 7 - Vila Miranda: risco Alto (volume 0.00 m³)
+  Dia 7 - Boa Vista: risco Alto (volume 0.00 m³)
+  Dia 7 - Itaquera: risco Alto (volume 0.00 m³)
+
+
+Bairro mais crítico: Vila Miranda (5 ocorrências)

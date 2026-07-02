@@ -1,0 +1,205 @@
+﻿import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import random
+
+
+def calcular_risco(autonomia):
+    if autonomia > 3:
+        return "Baixo"
+    elif 1 <= autonomia <= 3:
+        return "Médio"
+    else:
+        return "Alto"
+
+
+def validar_input(mensagem, tipo=float):
+    while True:
+        try:
+            valor = tipo(input(mensagem))
+            if valor < 0:
+                print("Por favor, insira um valor positivo.")
+                continue
+            return valor
+        except ValueError:
+            print("Entrada inválida. Digite um número.")
+
+
+def executar_sistema():
+    print("--- Sistema de Análise de Abastecimento de Água ---")
+    n = int(validar_input("Número de bairros a analisar: ", int))
+   
+    bairros_dados = []
+   
+    for i in range(n):
+        print(f"\nDados do Bairro {i+1}:")
+        nome = input("Nome do bairro: ")
+        demanda = validar_input(f"Demanda diária (m³): ")
+        capacidade = validar_input(f"Capacidade do reservatório (m³): ")
+        vol_inicial = validar_input(f"Volume inicial (m³): ")
+        perda_perc = validar_input(f"Percentual de perda na tubulação (0-100): ") / 100
+        custo_m3 = validar_input(f"Custo de bombeamento por m³ (R$): ")
+       
+        # Cálculos iniciais (Dia 0)
+        vol_perdido = demanda * perda_perc
+        vol_entregue = demanda + vol_perdido
+        custo_total = vol_entregue * custo_m3
+        autonomia = vol_inicial / demanda if demanda > 0 else float('inf')
+        risco = calcular_risco(autonomia)
+       
+        bairros_dados.append({
+            'Bairro': nome,
+            'Demanda': demanda,
+            'Capacidade': capacidade,
+            'Vol_Inicial': vol_inicial,
+            'Perda': perda_perc,
+            'Custo_M3': custo_m3,
+            'Vol_Entregue': vol_entregue,
+            'Custo_Diario': custo_total,
+            'Autonomia': autonomia,
+            'Risco': risco
+        })
+
+
+    df = pd.DataFrame(bairros_dados)
+   
+    # Exibição da Tabela
+    print("\n--- Resultados por Bairro (Situação Inicial) ---")
+    print(df[['Bairro', 'Vol_Entregue', 'Custo_Diario', 'Autonomia', 'Risco']])
+
+
+    # Identificação do Bairro Crítico
+    bairro_critico = df.loc[df['Autonomia'].idxmin()]
+    print(f"\n>>> Bairro mais crítico: {bairro_critico['Bairro']} (Autonomia: {bairro_critico['Autonomia']:.2f} dias)")
+
+
+    # Geração de Gráficos Iniciais
+    fig, axs = plt.subplots(1, 3, figsize=(18, 5))
+   
+    # 1. Demanda vs Entregue
+    df.plot(x='Bairro', y=['Demanda', 'Vol_Entregue'], kind='bar', ax=axs[0], color=['skyblue', 'salmon'])
+    axs[0].set_title('Demanda vs Volume Entregue')
+   
+    # 2. Custos
+    df.plot(x='Bairro', y='Custo_Diario', kind='bar', ax=axs[1], color='green')
+    axs[1].set_title('Custo Diário por Bairro')
+   
+    # 3. Distribuição de Risco
+    df['Risco'].value_counts().plot(kind='pie', ax=axs[2], autopct='%1.1f%%', colors=['green', 'yellow', 'red'])
+    axs[2].set_title('Distribuição de Níveis de Risco')
+   
+    plt.tight_layout()
+    plt.show()
+
+
+    # --- DESAFIO: SIMULAÇÃO DE 7 DIAS ---
+    print("\n--- Iniciando Simulação de 7 Dias ---")
+    historico_volumes = {b['Bairro']: [b['Vol_Inicial']] for b in bairros_dados}
+    dias = range(1, 8)
+   
+    for dia in dias:
+        print(f"Dia {dia}:")
+        for b in bairros_dados:
+            # Variação de demanda ±20%
+            variacao = random.uniform(0.8, 1.2)
+            demanda_real = b['Demanda'] * variacao
+            vol_necessario = demanda_real * (1 + b['Perda'])
+           
+            # Atualiza volume (Volume Anterior - Volume Necessário)
+            # Nota: Aqui simulamos o consumo. Em um sistema real, haveria o reabastecimento.
+            # Para esta análise de autonomia, focaremos no esgotamento do volume inicial.
+            vol_atual = historico_volumes[b['Bairro']][-1] - vol_necessario
+            if vol_atual < 0: vol_atual = 0
+           
+            historico_volumes[b['Bairro']].append(vol_atual)
+           
+            # Verificação de criticidade
+            autonomia_momento = vol_atual / b['Demanda'] if b['Demanda'] > 0 else 0
+            if autonomia_momento < 1:
+                print(f"  [ALERTA] {b['Bairro']} está em situação CRÍTICA no Dia {dia}!")
+
+
+    # Gráfico de Evolução (Simulação)
+    plt.figure(figsize=(10, 6))
+    for bairro, volumes in historico_volumes.items():
+        plt.plot(range(8), volumes, marker='o', label=bairro)
+   
+    plt.title('Evolução do Volume nos Reservatórios (7 Dias)')
+    plt.xlabel('Dia')
+    plt.ylabel('Volume (m³)')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+if __name__ == "__main__":
+    executar_sistema()
+   
+--- Sistema de Análise de Abastecimento de Água ---
+Número de bairros a analisar: 3
+
+
+Dados do Bairro 1:
+Nome do bairro: Centro
+Demanda diária (m³): 1000
+Capacidade do reservatório (m³): 5000
+Volume inicial (m³): 4500
+Percentual de perda na tubulação (0-100): 10
+Custo de bombeamento por m³ (R$): 2.50
+
+
+Dados do Bairro 2:
+Nome do bairro: Vila Real
+Demanda diária (m³): 500
+Capacidade do reservatório (m³): 2000
+Volume inicial (m³): 1200
+Percentual de perda na tubulação (0-100): 15
+Custo de bombeamento por m³ (R$): 3.10
+
+
+Dados do Bairro 3:
+Nome do bairro: Morada Nova
+Demanda diária (m³): 2000
+Capacidade do reservatório (m³): 25000
+Volume inicial (m³): 1800
+Percentual de perda na tubulação (0-100): 25
+Custo de bombeamento por m³ (R$): 4.50
+
+
+--- Resultados por Bairro (Situação Inicial) ---
+        Bairro  Vol_Entregue  Custo_Diario  Autonomia  Risco
+0       Centro        1100.0        2750.0        4.5  Baixo
+1    Vila Real         575.0        1782.5        2.4  Médio
+2  Morada Nova        2500.0       11250.0        0.9   Alto
+
+
+>>> Bairro mais crítico: Morada Nova (Autonomia: 0.90 dias)
+
+
+  
+
+--- Iniciando Simulação de 7 Dias ---
+Dia 1:
+  [ALERTA] Morada Nova está em situação CRÍTICA no Dia 1!
+Dia 2:
+  [ALERTA] Vila Real está em situação CRÍTICA no Dia 2!
+  [ALERTA] Morada Nova está em situação CRÍTICA no Dia 2!
+Dia 3:
+  [ALERTA] Vila Real está em situação CRÍTICA no Dia 3!
+  [ALERTA] Morada Nova está em situação CRÍTICA no Dia 3!
+Dia 4:
+  [ALERTA] Centro está em situação CRÍTICA no Dia 4!
+  [ALERTA] Vila Real está em situação CRÍTICA no Dia 4!
+  [ALERTA] Morada Nova está em situação CRÍTICA no Dia 4!
+Dia 5:
+  [ALERTA] Centro está em situação CRÍTICA no Dia 5!
+  [ALERTA] Vila Real está em situação CRÍTICA no Dia 5!
+  [ALERTA] Morada Nova está em situação CRÍTICA no Dia 5!
+Dia 6:
+  [ALERTA] Centro está em situação CRÍTICA no Dia 6!
+  [ALERTA] Vila Real está em situação CRÍTICA no Dia 6!
+  [ALERTA] Morada Nova está em situação CRÍTICA no Dia 6!
+Dia 7:
+  [ALERTA] Centro está em situação CRÍTICA no Dia 7!
+  [ALERTA] Vila Real está em situação CRÍTICA no Dia 7!
+  [ALERTA] Morada Nova está em situação CRÍTICA no Dia 7!

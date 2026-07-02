@@ -1,0 +1,166 @@
+﻿RELATÓRIO TÉCNICO: GERADOR AUTOMATIZADO DE VÍDEO PROMOCIONAL
+Componente Curricular: Inteligência Artificial e Programação Python
+Cidade Foco: Alegrete - RS (Portal: alegrete.org)
+1. Objetivo da Solução
+O objetivo deste artefato é automatizar a criação de mídias dinâmicas para o portal Alegrete: Um Baita Destino. A solução processa o vídeo de fundo da página inicial do site (que é originalmente mudo), realiza cortes temporais para transformá-lo em um teaser de 15 segundos (ideal para redes sociais como Instagram Reels, TikTok e YouTube Shorts), integra legendas dinâmicas com identidade visual adaptada ao turismo e adiciona uma faixa de narração profissional gerada inteiramente por Inteligência Artificial.
+2. LLM(s) Utilizada(s)
+* Gemini (Google): Utilizada no suporte de engenharia de prompt para a arquitetura, refinamento do código em Python seguindo as normas da PEP 8 e tratamento de exceções de áudio.
+* gTTS (Google Text-to-Speech API): Modelo de inteligência computacional de voz utilizado para converter o roteiro textual promocional em uma locução natural em português brasileiro.
+3. Principais Dificuldades Encontradas
+* Ausência de Canal de Áudio Nativo: O vídeo original do portal (video-bg.mp4) é mudo. Inicialmente, a biblioteca MoviePy tentava ler os metadados de áudio inexistentes, gerando a exceção NoAudioReceived e travando a aplicação. A solução exigiu forçar o parâmetro audio=False na leitura do clipe base.
+* Instabilidade em APIs de Terceiros na Nuvem: O uso inicial da biblioteca edge-tts apresentou falhas de timeout no ambiente do Google Colab. O fluxo foi corrigido migrando para a API do gTTS combinada com uma validação defensiva de tamanho de arquivo (os.path.getsize), impedindo que arquivos corrompidos quebrassem a renderização.
+4. Resultados Obtidos
+Foi gerado com sucesso o arquivo final promocional_alegrete.mp4. O vídeo cumpre todos os requisitos definidos: possui 15 segundos de duração, conta com transições suaves de entrada e saída (fadein/fadeout), traz duas camadas de textos estilizados em verde institucional e preto semitransparente para garantir alto contraste/acessibilidade, e apresenta uma narração fluida convidando o público a conhecer as tradições da terceira capital farroupilha.
+5. Possíveis Evoluções Futuras
+* Interface Web (Streamlit/Flask): Transformar o script em uma aplicação web onde o usuário final possa digitar qualquer roteiro, escolher a voz do narrador e gerar o vídeo na hora pelo navegador.
+* Inserção de Trilha Sonora de Fundo: Adicionar uma segunda camada de áudio com músicas instrumentais tradicionais gaúchas em domínio público, tocadas em volume baixo (background music), enriquecendo a imersão cultural do teaser.
+6. Código Python Utilizado
+Python
+import os
+import requests
+from gtts import gTTS
+from moviepy.editor import (
+    VideoFileClip,
+    TextClip,
+    CompositeVideoClip,
+    AudioFileClip
+)
+
+
+
+
+def baixar_video_portal():
+    """Realiza o download do vídeo de fundo mudo do portal alegrete.org."""
+    url_video = "https://alegrete.org/assets/video/video-bg.mp4"
+    nome_arquivo = "video_index_original.mp4"
+    
+    if not os.path.exists(nome_arquivo):
+        print("📥 Baixando o vídeo original da página inicial de Alegrete...")
+        resposta = requests.get(url_video, stream=True)
+        with open(nome_arquivo, "wb") as f:
+            for chunk in resposta.iter_content(chunk_size=1024*1024):
+                if chunk:
+                    f.write(chunk)
+        print("✅ Download do vídeo concluído!")
+    else:
+        print("📋 Vídeo original já existe no ambiente.")
+    return nome_arquivo
+
+
+
+
+def gerar_narracao_ia(texto, arquivo_saida):
+    """Gera a locução do texto utilizando a inteligência de voz do Google."""
+    print("🎙️ Gerando narração profissional por IA...")
+    try:
+        tts = gTTS(text=texto, lang='pt', tld='com.br')
+        tts.save(arquivo_saida)
+        
+        if os.path.exists(arquivo_saida) and os.path.getsize(arquivo_saida) > 0:
+            print("✅ Áudio da IA gerado com sucesso!")
+            return True
+        return False
+    except Exception as e:
+        print(f"⚠️ Falha ao conectar com o servidor de voz da IA: {e}")
+        return False
+
+
+
+
+def criar_video_promocional(video_input_path, audio_narracao_path, audio_ok):
+    """Realiza a edição, inclusão de legendas, áudio e efeitos visuais."""
+    print("🎬 Iniciando a edição automatizada do vídeo...")
+    
+    # Extrai estritamente a imagem (audio=False) para evitar erros
+    clip_base = VideoFileClip(video_input_path, audio=False).subclip(2, 17)
+    
+    if audio_ok:
+        try:
+            audio_ia = AudioFileClip(audio_narracao_path)
+            video_final_midia = clip_base.set_audio(audio_ia)
+            print("🔊 Áudio integrado ao vídeo com sucesso.")
+        except Exception as e:
+            print(f"⚠️ Erro ao ler áudio ({e}). Gerando vídeo sem som...")
+            video_final_midia = clip_base
+            audio_ok = False
+    else:
+        video_final_midia = clip_base
+
+
+    # Configuração de Legenda 1 (0 a 7 segundos)
+    txt_clip1 = (
+        TextClip(
+            "ALEGRETE: ONDE O PAMPA VIRA IDENTIDADE",
+            fontsize=30,
+            color='white',
+            font='Liberation-Sans-Bold',
+            bg_color='rgba(5, 150, 105, 0.8)'
+        )
+        .set_position(('center', 'bottom'))
+        .set_duration(7)
+        .crossfadein(1.0)
+    )
+
+
+    # Configuração de Legenda 2 (7 a 15 segundos)
+    txt_clip2 = (
+        TextClip(
+            "Descubra um Baita Destino em alegrete.org",
+            fontsize=28,
+            color='yellow',
+            font='Liberation-Sans-Bold',
+            bg_color='rgba(0, 0, 0, 0.7)'
+        )
+        .set_position(('center', 'bottom'))
+        .set_start(7)
+        .set_duration(8)
+        .crossfadein(1.0)
+    )
+
+
+    # Composposição final e aplicação de fadeout
+    video_final = CompositeVideoClip([video_final_midia, txt_clip1, txt_clip2])
+    video_final = video_final.fadeout(1.5)
+
+
+    output_filename = "promocional_alegrete.mp4"
+    print(f"🚀 Renderizando o arquivo final: {output_filename}...")
+    
+    if audio_ok:
+        video_final.write_videofile(
+            output_filename, fps=24, codec="libx264", audio_codec="aac"
+        )
+    else:
+        video_final.write_videofile(
+            output_filename, fps=24, codec="libx264", audio=False
+        )
+
+
+    # Fechamento de recursos
+    clip_base.close()
+    if audio_ok:
+        audio_ia.close()
+    video_final.close()
+    print("✨ Processo finalizado com sucesso!")
+
+
+
+
+if __name__ == "__main__":
+    video_original = baixar_video_portal()
+    audio_temporario = "narracao_ia.mp3"
+
+
+    texto_roteiro = (
+        "Conheça Alegrete, a terceira capital farroupilha. "
+        "Uma terra rica em cultura, tradição e horizontes largos. "
+        "Planeje sua visita e descubra um baita destino acessando o nosso portal."
+    )
+
+
+    sucesso_audio = gerar_narracao_ia(texto_roteiro, audio_temporario)
+    criar_video_promocional(video_original, audio_temporario, sucesso_audio)
+
+
+    if os.path.exists(audio_temporario):
+        os.remove(audio_temporario)

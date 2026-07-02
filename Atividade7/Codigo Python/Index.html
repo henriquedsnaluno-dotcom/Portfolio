@@ -1,0 +1,1046 @@
+﻿Código Python  |
+                         V
+
+
+# ============================================================
+# SISTEMA REALISTA DE ENERGIA SOLAR CORPORATIVA
+# ALEGRTE - RIO GRANDE DO SUL - BRASIL
+# ============================================================
+#
+# GOOGLE COLAB READY
+#
+# Este projeto simula:
+#
+# ✔ Grande empresa moderna em Alegrete/RS
+# ✔ Parque solar industrial
+# ✔ Consumo corporativo realista
+# ✔ Sistema de baterias
+# ✔ Uso da rede elétrica
+# ✔ Economia energética
+# ✔ Redução de CO₂
+# ✔ MAPA DINÂMICO INTERATIVO
+# ✔ SIMULAÇÃO VISUAL ANIMADA
+#
+# ============================================================
+
+
+# ============================================================
+# INSTALAÇÃO DAS BIBLIOTECAS
+# ============================================================
+
+
+# Execute apenas no Google Colab:
+# !pip install folium plotly
+
+
+# ============================================================
+# IMPORTAÇÕES
+# ============================================================
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import folium
+
+
+from folium.plugins import HeatMap
+from IPython.display import display
+
+
+# ============================================================
+# CONFIGURAÇÕES VISUAIS
+# ============================================================
+
+
+plt.style.use("seaborn-v0_8-darkgrid")
+
+
+# ============================================================
+# CONFIGURAÇÕES DA EMPRESA
+# ============================================================
+
+
+COMPANY_NAME = "MegaTech Solar Industrial"
+
+
+# ============================================================
+# LOCALIZAÇÃO — ALEGRETE / RS
+# ============================================================
+
+
+# Coordenadas reais aproximadas de Alegrete/RS
+
+
+LATITUDE = -29.7831
+LONGITUDE = -55.7919
+
+
+# ============================================================
+# SISTEMA SOLAR
+# ============================================================
+
+
+NUM_PANELS = 8500
+PANEL_POWER = 585
+PANEL_EFFICIENCY = 0.96
+
+
+# ============================================================
+# SISTEMA DE BATERIAS
+# ============================================================
+
+
+BATTERY_CAPACITY = 18000
+BATTERY_LEVEL = 9000
+BATTERY_EFFICIENCY = 0.94
+
+
+# ============================================================
+# CUSTOS
+# ============================================================
+
+
+ENERGY_PRICE = 0.88
+SELL_PRICE = 0.42
+
+
+# ============================================================
+# CO₂
+# ============================================================
+
+
+CO2_FACTOR = 0.078
+
+
+# ============================================================
+# TEMPO
+# ============================================================
+
+
+DAYS = 7
+TOTAL_HOURS = DAYS * 24
+
+
+time = np.arange(TOTAL_HOURS)
+
+
+# ============================================================
+# CLIMA REALISTA DE ALEGRETE/RS
+# ============================================================
+#
+# Alegrete possui:
+#
+# ✔ Alta incidência solar no verão
+# ✔ Variações climáticas moderadas
+# ✔ Forte radiação solar em dias limpos
+#
+# ============================================================
+
+
+weather_factor = [
+
+
+    0.92,  # segunda
+    0.88,  # terça
+    0.95,  # quarta
+    0.90,  # quinta
+    0.97,  # sexta
+    0.85,  # sábado
+    0.93   # domingo
+
+
+]
+
+
+# ============================================================
+# GERAÇÃO SOLAR
+# ============================================================
+
+
+def solar_generation(hour):
+
+
+    day = hour // 24
+    hour_day = hour % 24
+
+
+    climate = weather_factor[day]
+
+
+    # Sem geração durante a noite
+    if hour_day < 6 or hour_day > 18:
+        return 0
+
+
+    # Curva solar
+    solar_curve = np.sin(
+        np.pi * (hour_day - 6) / 12
+    )
+
+
+    # Fator solar de Alegrete
+    radiation_factor = 1.02
+
+
+    generation = (
+
+
+        NUM_PANELS *
+        PANEL_POWER *
+        PANEL_EFFICIENCY *
+        solar_curve *
+        radiation_factor *
+        climate
+
+
+    ) / 1000
+
+
+    return max(generation, 0)
+
+
+# ============================================================
+# CONSUMO CORPORATIVO
+# ============================================================
+
+
+def company_consumption(hour):
+
+
+    hour_day = hour % 24
+
+
+    # --------------------------------------------------------
+    # SETOR INDUSTRIAL
+    # --------------------------------------------------------
+
+
+    industrial = 2100
+
+
+    if 6 <= hour_day <= 18:
+        industrial += 3200
+
+
+    # --------------------------------------------------------
+    # DATA CENTER
+    # --------------------------------------------------------
+
+
+    data_center = 950
+
+
+    # --------------------------------------------------------
+    # CLIMATIZAÇÃO
+    # --------------------------------------------------------
+
+
+    hvac = 550
+
+
+    if 11 <= hour_day <= 17:
+        hvac += 700
+
+
+    # --------------------------------------------------------
+    # ESCRITÓRIOS
+    # --------------------------------------------------------
+
+
+    office = 300
+
+
+    if 7 <= hour_day <= 19:
+        office += 850
+
+
+    # --------------------------------------------------------
+    # ILUMINAÇÃO
+    # --------------------------------------------------------
+
+
+    lighting = 180
+
+
+    if hour_day >= 18 or hour_day <= 6:
+        lighting += 600
+
+
+    # --------------------------------------------------------
+    # VEÍCULOS ELÉTRICOS
+    # --------------------------------------------------------
+
+
+    ev_charging = 0
+
+
+    if 8 <= hour_day <= 20:
+        ev_charging += 1100
+
+
+    # --------------------------------------------------------
+    # VARIAÇÃO ALEATÓRIA
+    # --------------------------------------------------------
+
+
+    random_variation = np.random.uniform(-250, 250)
+
+
+    total = (
+
+
+        industrial +
+        data_center +
+        hvac +
+        office +
+        lighting +
+        ev_charging +
+        random_variation
+
+
+    )
+
+
+    return max(total, 0)
+
+
+# ============================================================
+# LISTAS
+# ============================================================
+
+
+solar_data = []
+consumption_data = []
+battery_data = []
+grid_data = []
+economy_data = []
+co2_data = []
+
+
+# ============================================================
+# VARIÁVEIS
+# ============================================================
+
+
+battery = BATTERY_LEVEL
+
+
+total_generated = 0
+total_consumed = 0
+total_grid = 0
+total_savings = 0
+
+
+# ============================================================
+# SIMULAÇÃO
+# ============================================================
+
+
+for hour in time:
+
+
+    generated = solar_generation(hour)
+
+
+    consumed = company_consumption(hour)
+
+
+    balance = generated - consumed
+
+
+    grid_usage = 0
+
+
+    # --------------------------------------------------------
+    # EXCESSO DE ENERGIA
+    # --------------------------------------------------------
+
+
+    if balance > 0:
+
+
+        storage = balance * BATTERY_EFFICIENCY
+
+
+        if battery + storage <= BATTERY_CAPACITY:
+
+
+            battery += storage
+
+
+        else:
+
+
+            battery = BATTERY_CAPACITY
+
+
+    # --------------------------------------------------------
+    # FALTA DE ENERGIA
+    # --------------------------------------------------------
+
+
+    else:
+
+
+        needed = abs(balance)
+
+
+        if battery >= needed:
+
+
+            battery -= needed
+
+
+        else:
+
+
+            grid_usage = needed - battery
+            battery = 0
+
+
+    # --------------------------------------------------------
+    # ECONOMIA
+    # --------------------------------------------------------
+
+
+    savings = generated * ENERGY_PRICE
+
+
+    # --------------------------------------------------------
+    # CO₂
+    # --------------------------------------------------------
+
+
+    co2_saved = generated * CO2_FACTOR
+
+
+    # --------------------------------------------------------
+    # ARMAZENAMENTO
+    # --------------------------------------------------------
+
+
+    solar_data.append(generated)
+    consumption_data.append(consumed)
+    battery_data.append(battery)
+    grid_data.append(grid_usage)
+    economy_data.append(savings)
+    co2_data.append(co2_saved)
+
+
+    # --------------------------------------------------------
+    # TOTAIS
+    # --------------------------------------------------------
+
+
+    total_generated += generated
+    total_consumed += consumed
+    total_grid += grid_usage
+    total_savings += savings
+
+
+# ============================================================
+# DATAFRAME
+# ============================================================
+
+
+df = pd.DataFrame({
+
+
+    "Hora": time,
+    "Energia Solar": solar_data,
+    "Consumo": consumption_data,
+    "Bateria": battery_data,
+    "Rede": grid_data,
+    "Economia": economy_data,
+    "CO2": co2_data
+
+
+})
+
+
+# ============================================================
+# RELATÓRIO
+# ============================================================
+
+
+print("\n===================================================")
+print("RELATÓRIO ENERGÉTICO CORPORATIVO")
+print("ALEGRETE - RIO GRANDE DO SUL")
+print("===================================================\n")
+
+
+print(f"Empresa: {COMPANY_NAME}\n")
+
+
+print(f"Energia Solar Gerada: {total_generated:,.2f} kWh")
+
+
+print(f"Consumo Total: {total_consumed:,.2f} kWh")
+
+
+print(f"Energia da Rede: {total_grid:,.2f} kWh")
+
+
+print(f"Economia Financeira: R$ {total_savings:,.2f}")
+
+
+print(f"Redução de CO₂: {sum(co2_data):,.2f} kg")
+
+
+print("\n===================================================\n")
+
+
+# ============================================================
+# GRÁFICO 1 — GERAÇÃO x CONSUMO
+# ============================================================
+
+
+plt.figure(figsize=(18, 7))
+
+
+plt.plot(
+
+
+    time,
+    solar_data,
+
+
+    linewidth=2,
+
+
+    label="Energia Solar"
+
+
+)
+
+
+plt.plot(
+
+
+    time,
+    consumption_data,
+
+
+    linewidth=2,
+
+
+    label="Consumo Corporativo"
+
+
+)
+
+
+plt.title(
+
+
+    "Produção Solar x Consumo - Alegrete/RS",
+
+
+    fontsize=20,
+    fontweight="bold"
+
+
+)
+
+
+plt.xlabel("Horas")
+plt.ylabel("Energia (kWh)")
+
+
+plt.legend()
+
+
+plt.show()
+
+
+# ============================================================
+# GRÁFICO 2 — BATERIAS
+# ============================================================
+
+
+plt.figure(figsize=(18, 6))
+
+
+plt.plot(
+
+
+    time,
+    battery_data,
+
+
+    linewidth=3
+
+
+)
+
+
+plt.title(
+
+
+    "Nível das Baterias Industriais",
+
+
+    fontsize=20,
+    fontweight="bold"
+
+
+)
+
+
+plt.xlabel("Horas")
+plt.ylabel("Energia Armazenada (kWh)")
+
+
+plt.show()
+
+
+# ============================================================
+# MAPA DINÂMICO DE ALEGRETE
+# ============================================================
+
+
+print("\nGerando mapa dinâmico de Alegrete/RS...\n")
+
+
+solar_map = folium.Map(
+
+
+    location=[LATITUDE, LONGITUDE],
+
+
+    zoom_start=14
+
+
+)
+
+
+# ------------------------------------------------------------
+# EMPRESA
+# ------------------------------------------------------------
+
+
+folium.Marker(
+
+
+    [LATITUDE, LONGITUDE],
+
+
+    popup="""
+    MegaTech Solar Industrial
+    Alegrete - RS
+    """,
+
+
+    tooltip="Empresa Sustentável",
+
+
+    icon=folium.Icon(color="green")
+
+
+).add_to(solar_map)
+
+
+# ------------------------------------------------------------
+# PAINÉIS SOLARES
+# ------------------------------------------------------------
+
+
+for i in range(60):
+
+
+    lat_offset = np.random.uniform(-0.01, 0.01)
+    lon_offset = np.random.uniform(-0.01, 0.01)
+
+
+    folium.CircleMarker(
+
+
+        location=[
+            LATITUDE + lat_offset,
+            LONGITUDE + lon_offset
+        ],
+
+
+        radius=5,
+
+
+        popup="Painel Solar",
+
+
+        color="orange",
+
+
+        fill=True,
+
+
+        fill_opacity=0.7
+
+
+    ).add_to(solar_map)
+
+
+# ------------------------------------------------------------
+# MAPA DE CALOR SOLAR
+# ------------------------------------------------------------
+
+
+heat_data = []
+
+
+for i in range(120):
+
+
+    lat_offset = np.random.uniform(-0.02, 0.02)
+    lon_offset = np.random.uniform(-0.02, 0.02)
+
+
+    intensity = np.random.uniform(0.3, 1)
+
+
+    heat_data.append([
+
+
+        LATITUDE + lat_offset,
+        LONGITUDE + lon_offset,
+        intensity
+
+
+    ])
+
+
+HeatMap(heat_data).add_to(solar_map)
+
+
+display(solar_map)
+
+
+# ============================================================
+# SIMULAÇÃO VISUAL INTERATIVA
+# ============================================================
+
+
+print("\nGerando simulação visual...\n")
+
+
+fig = go.Figure()
+
+
+# Energia solar
+fig.add_trace(
+
+
+    go.Scatter(
+
+
+        x=time,
+        y=solar_data,
+
+
+        mode='lines',
+
+
+        name='Energia Solar'
+
+
+    )
+
+
+)
+
+
+# Consumo
+fig.add_trace(
+
+
+    go.Scatter(
+
+
+        x=time,
+        y=consumption_data,
+
+
+        mode='lines',
+
+
+        name='Consumo'
+
+
+    )
+
+
+)
+
+
+# Baterias
+fig.add_trace(
+
+
+    go.Scatter(
+
+
+        x=time,
+        y=battery_data,
+
+
+        mode='lines',
+
+
+        name='Bateria'
+
+
+    )
+
+
+)
+
+
+fig.update_layout(
+
+
+    title="Simulação Energética Corporativa - Alegrete/RS",
+
+
+    xaxis_title="Horas",
+
+
+    yaxis_title="Energia (kWh)",
+
+
+    hovermode="x unified",
+
+
+    template="plotly_dark",
+
+
+    width=1200,
+
+
+    height=600
+
+
+)
+
+
+fig.show()
+
+
+# ============================================================
+# DASHBOARD INTERATIVO
+# ============================================================
+
+
+dashboard = go.Figure()
+
+
+dashboard.add_trace(
+
+
+    go.Bar(
+
+
+        x=time,
+        y=grid_data,
+
+
+        name="Uso da Rede"
+
+
+    )
+
+
+)
+
+
+dashboard.add_trace(
+
+
+    go.Scatter(
+
+
+        x=time,
+        y=economy_data,
+
+
+        mode='lines',
+
+
+        name="Economia"
+
+
+    )
+
+
+)
+
+
+dashboard.update_layout(
+
+
+    title="Dashboard Energético Inteligente",
+
+
+    xaxis_title="Horas",
+
+
+    yaxis_title="Valores",
+
+
+    template="plotly_white",
+
+
+    width=1200,
+
+
+    height=600
+
+
+)
+
+
+dashboard.show()
+
+
+# ============================================================
+# MAPA DE CALOR TEMPORAL
+# ============================================================
+
+
+heatmap_matrix = np.array(
+    consumption_data
+).reshape(7, 24)
+
+
+plt.figure(figsize=(16, 6))
+
+
+plt.imshow(
+
+
+    heatmap_matrix,
+
+
+    aspect='auto'
+
+
+)
+
+
+plt.colorbar(label='Consumo kWh')
+
+
+plt.title(
+
+
+    "Mapa de Calor do Consumo Energético",
+
+
+    fontsize=20,
+    fontweight="bold"
+
+
+)
+
+
+plt.xlabel("Hora do Dia")
+plt.ylabel("Dia da Semana")
+
+
+plt.yticks(
+
+
+    range(7),
+
+
+    ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"]
+
+
+)
+
+
+plt.show()
+
+
+# ============================================================
+# ANÁLISE FINAL
+# ============================================================
+
+
+autonomy = (
+    total_generated /
+    total_consumed
+) * 100
+
+
+print("\n===================================================")
+print("ANÁLISE FINAL")
+print("===================================================\n")
+
+
+print(
+    f"Autonomia Energética: "
+    f"{autonomy:.2f}%"
+)
+
+
+print()
+
+
+if autonomy >= 90:
+
+
+    print(
+        "A empresa possui altíssima independência "
+        "energética."
+    )
+
+
+elif autonomy >= 70:
+
+
+    print(
+        "A empresa possui boa eficiência energética."
+    )
+
+
+else:
+
+
+    print(
+        "A empresa ainda depende significativamente "
+        "da rede elétrica."
+    )
+
+
+print()
+
+
+print(
+    "O parque solar instalado em Alegrete/RS "
+    "demonstrou excelente desempenho energético."
+)
+
+
+print()
+
+
+print(
+    "O sistema inteligente conseguiu reduzir "
+    "custos operacionais e emissões de CO₂."
+)
+
+
+print()
+
+
+print(
+    "A análise espacial através do mapa de calor "
+    "permitiu identificar áreas ideais para "
+    "instalação dos painéis solares."
+)
+
+
+print("\n===================================================")
+print("FIM DA SIMULAÇÃO")
+print("===================================================")

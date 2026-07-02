@@ -1,0 +1,533 @@
+﻿"""
+Problema 01: Análise de Tensões em Treliças Planas
+Disciplina: Algoritmos e Programação
+Data: 12/05/2026
+
+
+Implementação do método de Gauss-Jordan MANUAL (sem numpy.linalg.solve)
+"""
+
+
+import math
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+import numpy as np
+
+
+
+
+# ============================================================
+# RESOLUÇÃO DE SISTEMA LINEAR — GAUSS-JORDAN MANUAL
+# ============================================================
+
+
+def gauss_jordan(A, b):
+    """
+    Resolve o sistema linear Ax = b pelo método de Gauss-Jordan.
+    Implementação manual, sem uso de np.linalg.solve ou similar.
+    Retorna o vetor solução x ou lança exceção se singular.
+    """
+    n = len(b)
+    # Monta matriz aumentada [A | b]
+    M = [[float(A[i][j]) for j in range(n)] + [float(b[i])] for i in range(n)]
+
+
+    for col in range(n):
+        # Pivotamento parcial
+        max_linha = col
+        for linha in range(col + 1, n):
+            if abs(M[linha][col]) > abs(M[max_linha][col]):
+                max_linha = linha
+        M[col], M[max_linha] = M[max_linha], M[col]
+
+
+        pivo = M[col][col]
+        if abs(pivo) < 1e-12:
+            raise ValueError(f"Sistema singular ou mal condicionado na coluna {col}.")
+
+
+        # Normaliza linha do pivô
+        for j in range(col, n + 1):
+            M[col][j] /= pivo
+
+
+        # Elimina coluna nas outras linhas
+        for linha in range(n):
+            if linha != col:
+                fator = M[linha][col]
+                for j in range(col, n + 1):
+                    M[linha][j] -= fator * M[col][j]
+
+
+    return [M[i][n] for i in range(n)]
+
+
+
+
+# ============================================================
+# ENTRADA E VALIDAÇÃO
+# ============================================================
+
+
+def ler_inteiro(msg, minimo=1):
+    while True:
+        try:
+            v = int(input(msg))
+            if v < minimo:
+                print(f"  [ERRO] Valor mínimo: {minimo}.")
+            else:
+                return v
+        except ValueError:
+            print("  [ERRO] Digite um número inteiro.")
+
+
+
+
+def ler_float(msg):
+    while True:
+        try:
+            return float(input(msg))
+        except ValueError:
+            print("  [ERRO] Digite um número válido.")
+
+
+
+
+def ler_apoio(msg):
+    opcoes = {"livre": 0, "movel": 1, "fixo": 2}
+    while True:
+        v = input(msg).strip().lower()
+        if v in opcoes:
+            return opcoes[v]
+        print("  [ERRO] Digite: livre, movel ou fixo.")
+
+
+
+
+def coletar_dados():
+    """Coleta interativamente todos os dados da treliça."""
+    print("\n--- DADOS DA TRELIÇA ---")
+    N = ler_inteiro("Número de nós N: ", minimo=2)
+
+
+    x = []
+    y = []
+    print("\nCoordenadas dos nós (em metros):")
+    for i in range(N):
+        print(f"  Nó {i}:")
+        x.append(ler_float(f"    x[{i}]: "))
+        y.append(ler_float(f"    y[{i}]: "))
+
+
+    B = ler_inteiro("\nNúmero de barras B: ", minimo=1)
+    barras = []
+    print("Conectividade das barras (índices dos nós, iniciando em 0):")
+    for k in range(B):
+        while True:
+            ni = ler_inteiro(f"  Barra {k} — nó inicial (0 a {N-1}): ", minimo=0)
+            nf = ler_inteiro(f"  Barra {k} — nó final   (0 a {N-1}): ", minimo=0)
+            if ni == nf:
+                print("  [ERRO] Os nós devem ser diferentes.")
+            elif ni >= N or nf >= N:
+                print(f"  [ERRO] Índice deve ser entre 0 e {N-1}.")
+            else:
+                barras.append((ni, nf))
+                break
+
+
+    print("\nCargas aplicadas em cada nó:")
+    Fx = []
+    Fy = []
+    for i in range(N):
+        print(f"  Nó {i}:")
+        Fx.append(ler_float(f"    Fx[{i}] (N): "))
+        Fy.append(ler_float(f"    Fy[{i}] (N): "))
+
+
+    print("\nTipo de apoio em cada nó (livre / movel / fixo):")
+    apoios = []
+    for i in range(N):
+        apoios.append(ler_apoio(f"  Apoio no nó {i}: "))
+
+
+    return N, x, y, B, barras, Fx, Fy, apoios
+
+
+
+
+def dados_trelica_teste():
+    """
+    Treliça Warren padrão: 4 nós, 5 barras, carga 1000 N no nó 1,
+    apoio fixo no nó 0, apoio móvel no nó 3.
+    Geometria (metros):
+      Nó 0: (0, 0)   Nó 1: (1, 0)   Nó 2: (2, 0)   Nó 3: (3, 0)...
+    Usamos a Warren com nó superior:
+      Nó 0: (0, 0), Nó 1: (1, 1), Nó 2: (2, 0), Nó 3: (3, 0) — simplificada
+    Warren simétrica 4 nós:
+      0:(0,0)  1:(1,0)  2:(2,0) — base
+      3:(1,1)            — nó superior central
+    Barras: 0-1, 1-2, 0-3, 3-2, 1-3  (5 barras)
+    Carga: Fy[1] = -1000 N (para baixo no nó central inferior 1 ou no nó superior)
+    Apoio fixo: nó 0 | Apoio móvel (vertical): nó 2
+    """
+    N = 4
+    x = [0.0, 1.0, 2.0, 1.0]
+    y = [0.0, 0.0, 0.0, 1.0]
+    B = 5
+    barras = [(0, 1), (1, 2), (0, 3), (2, 3), (1, 3)]
+    Fx = [0.0, 0.0, 0.0, 0.0]
+    Fy = [0.0, -1000.0, 0.0, 0.0]
+    # 0=livre, 1=movel(só Fy), 2=fixo(Fx+Fy)
+    apoios = [2, 0, 1, 0]
+    return N, x, y, B, barras, Fx, Fy, apoios
+
+
+
+
+# ============================================================
+# MONTAGEM DA MATRIZ DE EQUILÍBRIO
+# ============================================================
+
+
+def comprimento_barra(x, y, ni, nf):
+    return math.sqrt((x[nf] - x[ni])**2 + (y[nf] - y[ni])**2)
+
+
+
+
+def cossenos_diretores(x, y, ni, nf):
+    L = comprimento_barra(x, y, ni, nf)
+    cx = (x[nf] - x[ni]) / L
+    cy = (y[nf] - y[ni]) / L
+    return cx, cy
+
+
+
+
+def montar_sistema(N, x, y, B, barras, Fx, Fy, apoios):
+    """
+    Monta a matriz de equilíbrio (2N x 2N) e vetor de forças externas.
+    Incógnitas: [F_barra_0 ... F_barra_{B-1}, R_apoios...]
+    onde R_apoios são as reações nos nós com apoio.
+
+
+    Estratégia: 2N equações (equilíbrio de cada nó em x e y).
+    Incógnitas = B forças nas barras + reações dos apoios.
+    """
+    # Conta incógnitas de reação
+    reacoes = []   # (nó, direção): direção 0=x, 1=y
+    for i in range(N):
+        if apoios[i] == 2:      # fixo: reação em x e y
+            reacoes.append((i, 0))
+            reacoes.append((i, 1))
+        elif apoios[i] == 1:    # móvel: só reação em y
+            reacoes.append((i, 1))
+
+
+    total_inc = B + len(reacoes)
+    total_eq  = 2 * N
+
+
+    if total_inc != total_eq:
+        print(f"\n  [AVISO] Sistema {'indeterminado' if total_inc > total_eq else 'sub-determinado'}: "
+              f"{total_eq} equações, {total_inc} incógnitas.")
+
+
+    dim = total_eq
+    A = [[0.0] * dim for _ in range(dim)]
+    b = [0.0] * dim
+
+
+    # Contribuição das barras
+    for k, (ni, nf) in enumerate(barras):
+        cx, cy = cossenos_diretores(x, y, ni, nf)
+        # Equilíbrio do nó ni (força da barra aponta de ni para nf)
+        A[2 * ni][k]     += cx
+        A[2 * ni + 1][k] += cy
+        # Equilíbrio do nó nf (força oposta)
+        A[2 * nf][k]     -= cx
+        A[2 * nf + 1][k] -= cy
+
+
+    # Contribuição das reações
+    for idx, (no, direcao) in enumerate(reacoes):
+        col = B + idx
+        linha = 2 * no + direcao
+        if linha < dim:
+            A[linha][col] += 1.0
+
+
+    # Vetor de cargas externas (lado direito: -F_ext)
+    for i in range(N):
+        b[2 * i]     = -Fx[i]
+        b[2 * i + 1] = -Fy[i]
+
+
+    return A, b, reacoes
+
+
+
+
+# ============================================================
+# PROCESSAMENTO E ESTATÍSTICAS
+# ============================================================
+
+
+def classificar_barra(forca):
+    if abs(forca) < 1e-6:
+        return "Nula"
+    return "Tração (+)" if forca > 0 else "Compressão (−)"
+
+
+
+
+def calcular_estatisticas(forcas_barras, reacoes_vals, reacoes_idx, N):
+    magnitudes = [abs(f) for f in forcas_barras]
+    idx_max = magnitudes.index(max(magnitudes))
+    media   = sum(magnitudes) / len(magnitudes) if magnitudes else 0
+    soma_rx = sum(v for v, (no, d) in zip(reacoes_vals, reacoes_idx) if d == 0)
+    soma_ry = sum(v for v, (no, d) in zip(reacoes_vals, reacoes_idx) if d == 1)
+    return idx_max, media, soma_rx, soma_ry
+
+
+
+
+def exibir_resultados(B, barras, forcas_barras, reacoes_idx, reacoes_vals):
+    print("\n" + "=" * 65)
+    print("RESULTADOS — FORÇAS NAS BARRAS")
+    print("=" * 65)
+    print(f"  {'Barra':<8} {'Nós':<12} {'Força (N)':>14}  Classificação")
+    print("-" * 65)
+    for k in range(B):
+        ni, nf = barras[k]
+        f = forcas_barras[k]
+        print(f"  {k:<8} {ni}→{nf:<10} {f:>14.4f}  {classificar_barra(f)}")
+
+
+    print("\nREAÇÕES NOS APOIOS:")
+    dir_nome = {0: "Rx", 1: "Ry"}
+    for (no, direcao), val in zip(reacoes_idx, reacoes_vals):
+        print(f"  Nó {no} — {dir_nome[direcao]}: {val:.4f} N")
+
+
+    idx_max, media, soma_rx, soma_ry = calcular_estatisticas(
+        forcas_barras, reacoes_vals, reacoes_idx, len(barras))
+    ni, nf = barras[idx_max]
+    print(f"\n  Barra mais solicitada : Barra {idx_max} ({ni}→{nf}) "
+          f"— {abs(forcas_barras[idx_max]):.4f} N")
+    print(f"  Força média (módulo)  : {media:.4f} N")
+    print(f"  Somatório reações X   : {soma_rx:.4f} N")
+    print(f"  Somatório reações Y   : {soma_ry:.4f} N")
+    print("=" * 65)
+
+
+
+
+# ============================================================
+# GRÁFICOS
+# ============================================================
+
+
+def gerar_graficos(N, x, y, B, barras, forcas_barras, apoios):
+    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+    fig.suptitle("Análise de Treliça Plana", fontsize=15, fontweight="bold")
+
+
+    # --- Gráfico 1: Treliça original ---
+    ax1 = axes[0][0]
+    for k, (ni, nf) in enumerate(barras):
+        ax1.plot([x[ni], x[nf]], [y[ni], y[nf]], "b-", linewidth=2)
+        mx, my = (x[ni]+x[nf])/2, (y[ni]+y[nf])/2
+        ax1.text(mx, my, f"B{k}", fontsize=7, ha="center", color="navy")
+    for i in range(N):
+        marcador = "^" if apoios[i] == 2 else ("v" if apoios[i] == 1 else "o")
+        cor = "red" if apoios[i] == 2 else ("orange" if apoios[i] == 1 else "green")
+        ax1.plot(x[i], y[i], marcador, markersize=10, color=cor)
+        ax1.text(x[i], y[i] + 0.05 * (max(y) - min(y) + 0.1),
+                 f"N{i}", fontsize=8, ha="center", fontweight="bold")
+    ax1.set_title("Treliça Original (nós e apoios)")
+    ax1.set_xlabel("x (m)"); ax1.set_ylabel("y (m)")
+    ax1.set_aspect("equal"); ax1.grid(True, linestyle="--", alpha=0.4)
+    from matplotlib.lines import Line2D
+    legend_elems = [
+        Line2D([0],[0], marker="^", color="w", markerfacecolor="red",   markersize=10, label="Fixo"),
+        Line2D([0],[0], marker="v", color="w", markerfacecolor="orange",markersize=10, label="Móvel"),
+        Line2D([0],[0], marker="o", color="w", markerfacecolor="green", markersize=10, label="Livre"),
+    ]
+    ax1.legend(handles=legend_elems, loc="best", fontsize=8)
+
+
+    # --- Gráfico 2: Mapa de calor (tração=azul, compressão=vermelho) ---
+    ax2 = axes[0][1]
+    max_f = max(abs(f) for f in forcas_barras) or 1.0
+    norm  = mcolors.TwoSlopeNorm(vmin=-max_f, vcenter=0, vmax=max_f)
+    cmap  = cm.RdBu  # azul=positivo(tração), vermelho=negativo(compressão)
+
+
+    for k, (ni, nf) in enumerate(barras):
+        cor = cmap(norm(forcas_barras[k]))
+        lw  = 1.5 + 3.0 * abs(forcas_barras[k]) / max_f
+        ax2.plot([x[ni], x[nf]], [y[ni], y[nf]], color=cor, linewidth=lw)
+    for i in range(N):
+        ax2.plot(x[i], y[i], "ko", markersize=6)
+        ax2.text(x[i], y[i] + 0.05 * (max(y) - min(y) + 0.1),
+                 f"N{i}", fontsize=8, ha="center")
+    sm = cm.ScalarMappable(cmap=cmap, norm=norm)
+    sm.set_array([])
+    plt.colorbar(sm, ax=ax2, label="Força (N) — Azul=Tração / Vermelho=Compressão")
+    ax2.set_title("Mapa de Calor das Forças")
+    ax2.set_xlabel("x (m)"); ax2.set_ylabel("y (m)")
+    ax2.set_aspect("equal"); ax2.grid(True, linestyle="--", alpha=0.4)
+
+
+    # --- Gráfico 3: Barras com magnitude das forças ---
+    ax3 = axes[1][0]
+    labels = [f"B{k}\n({barras[k][0]}→{barras[k][1]})" for k in range(B)]
+    cores  = ["#e74c3c" if f < 0 else "#3498db" for f in forcas_barras]
+    bars   = ax3.bar(labels, forcas_barras, color=cores, edgecolor="white")
+    ax3.axhline(0, color="black", linewidth=0.8)
+    ax3.bar_label(bars, fmt="%.1f", padding=3, fontsize=8)
+    ax3.set_title("Forças Internas por Barra")
+    ax3.set_ylabel("Força (N)")
+    ax3.set_xlabel("Barra")
+    ax3.grid(axis="y", linestyle="--", alpha=0.5)
+    from matplotlib.patches import Patch
+    ax3.legend(handles=[Patch(color="#3498db", label="Tração (+)"),
+                         Patch(color="#e74c3c", label="Compressão (−)")])
+
+
+    # --- Gráfico 4: Histograma da distribuição das forças ---
+    ax4 = axes[1][1]
+    ax4.hist(forcas_barras, bins=max(5, B//2), color="#9b59b6",
+             edgecolor="white", alpha=0.85)
+    ax4.axvline(0, color="black", linewidth=1, linestyle="--", label="Zero")
+    media = sum(forcas_barras) / len(forcas_barras)
+    ax4.axvline(media, color="orange", linewidth=1.5, linestyle="-",
+                label=f"Média: {media:.1f} N")
+    ax4.set_title("Histograma das Forças Internas")
+    ax4.set_xlabel("Força (N)")
+    ax4.set_ylabel("Frequência")
+    ax4.legend()
+    ax4.grid(linestyle="--", alpha=0.5)
+
+
+    plt.tight_layout()
+    plt.savefig("grafico_trelica.png", dpi=150, bbox_inches="tight")
+    plt.show()
+    print("\n  Gráficos salvos em: grafico_trelica.png")
+
+
+
+
+# ============================================================
+# PROGRAMA PRINCIPAL
+# ============================================================
+
+
+def main():
+    print("=" * 60)
+    print("  ANÁLISE DE TENSÕES EM TRELIÇAS PLANAS")
+    print("=" * 60)
+
+
+    print("\nEscolha o modo de entrada:")
+    print("  1 — Usar treliça-teste padrão (Warren 4 nós, 5 barras)")
+    print("  2 — Inserir dados manualmente")
+
+
+    while True:
+        modo = input("Opção (1 ou 2): ").strip()
+        if modo in ("1", "2"):
+            break
+        print("  [ERRO] Digite 1 ou 2.")
+
+
+    if modo == "1":
+        N, x, y, B, barras, Fx, Fy, apoios = dados_trelica_teste()
+        print("\n  [Treliça-teste carregada com sucesso]")
+    else:
+        N, x, y, B, barras, Fx, Fy, apoios = coletar_dados()
+
+
+    # Montagem do sistema
+    print("\nMontando matriz de equilíbrio...")
+    A, b_vec, reacoes_idx = montar_sistema(N, x, y, B, barras, Fx, Fy, apoios)
+
+
+    # Resolução pelo método de Gauss-Jordan manual
+    print("Resolvendo pelo método de Gauss-Jordan (implementação manual)...")
+    try:
+        solucao = gauss_jordan(A, b_vec)
+    except ValueError as e:
+        print(f"\n  [ERRO] {e}")
+        print("  Verifique os apoios e a conectividade da treliça.")
+        return
+
+
+    forcas_barras  = solucao[:B]
+    reacoes_vals   = solucao[B:]
+
+
+    # Resultados no terminal
+    exibir_resultados(B, barras, forcas_barras, reacoes_idx, reacoes_vals)
+
+
+    # Gráficos
+    print("\nGerando gráficos...")
+    gerar_graficos(N, x, y, B, barras, forcas_barras, apoios)
+
+
+
+
+if __name__ == "__main__":
+    main()
+============================================================
+  ANÁLISE DE TENSÕES EM TRELIÇAS PLANAS
+============================================================
+
+
+Escolha o modo de entrada:
+  1 — Usar treliça-teste padrão (Warren 4 nós, 5 barras)
+  2 — Inserir dados manualmente
+Opção (1 ou 2): 1
+
+
+  [Treliça-teste carregada com sucesso]
+
+
+Montando matriz de equilíbrio...
+Resolvendo pelo método de Gauss-Jordan (implementação manual)...
+
+
+=================================================================
+RESULTADOS — FORÇAS NAS BARRAS
+=================================================================
+  Barra    Nós               Força (N)  Classificação
+-----------------------------------------------------------------
+  0        0→1                500.0000  Tração (+)
+  1        1→2                500.0000  Tração (+)
+  2        0→3               -707.1068  Compressão (−)
+  3        2→3               -707.1068  Compressão (−)
+  4        1→3               1000.0000  Tração (+)
+
+
+REAÇÕES NOS APOIOS:
+  Nó 0 — Rx: 0.0000 N
+  Nó 0 — Ry: 500.0000 N
+  Nó 2 — Ry: 500.0000 N
+
+
+  Barra mais solicitada : Barra 4 (1→3) — 1000.0000 N
+  Força média (módulo)  : 682.8427 N
+  Somatório reações X   : 0.0000 N
+  Somatório reações Y   : 1000.0000 N
+=================================================================
+
+
+Gerando gráficos...
+
+
+  
+
+ Gráficos salvos em: grafico_trelica.png

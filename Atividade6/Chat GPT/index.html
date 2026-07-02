@@ -1,0 +1,493 @@
+﻿import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+import time
+
+
+# ==========================================================
+# SISTEMA DE ANÁLISE DE TRELIÇAS PLANAS ISOSTÁTICAS
+# Método dos Nós + Eliminação de Gauss Manual
+# ==========================================================
+
+
+# ----------------------------------------------------------
+# ELIMINAÇÃO DE GAUSS MANUAL
+# ----------------------------------------------------------
+def gauss_elimination(A, b):
+    A = A.astype(float)
+    b = b.astype(float)
+
+
+    n = len(b)
+
+
+    # Monta matriz aumentada
+    M = np.hstack([A, b.reshape(-1, 1)])
+
+
+    # Eliminação
+    for k in range(n):
+
+
+        # Pivotamento parcial
+        max_row = np.argmax(abs(M[k:, k])) + k
+        M[[k, max_row]] = M[[max_row, k]]
+
+
+        pivot = M[k, k]
+
+
+        if abs(pivot) < 1e-12:
+            raise ValueError("Sistema singular ou mal condicionado.")
+
+
+        # Normalização
+        M[k] = M[k] / pivot
+
+
+        # Eliminação
+        for i in range(k + 1, n):
+            factor = M[i, k]
+            M[i] -= factor * M[k]
+
+
+    # Retrossubstituição
+    x = np.zeros(n)
+
+
+    for i in range(n - 1, -1, -1):
+        x[i] = M[i, -1] - np.sum(M[i, i + 1:n] * x[i + 1:n])
+
+
+    return x
+
+
+
+
+# ----------------------------------------------------------
+# CLASSE DA TRELIÇA
+# ----------------------------------------------------------
+class Truss2D:
+
+
+    def __init__(self, nodes, bars, forces, supports):
+
+
+        self.nodes = np.array(nodes, dtype=float)
+        self.bars = bars
+        self.forces = np.array(forces, dtype=float)
+        self.supports = supports
+
+
+        self.N = len(nodes)
+        self.B = len(bars)
+
+
+        self.reactions = []
+        self.bar_forces = None
+
+
+    # ------------------------------------------------------
+    # MONTAGEM DO SISTEMA
+    # ------------------------------------------------------
+    def assemble_system(self):
+
+
+        reaction_map = []
+
+
+        for i, support in enumerate(self.supports):
+
+
+            if support == 'fixed':
+                reaction_map.append((i, 'x'))
+                reaction_map.append((i, 'y'))
+
+
+            elif support == 'roller':
+                reaction_map.append((i, 'y'))
+
+
+        self.reactions = reaction_map
+
+
+        unknowns = self.B + len(reaction_map)
+
+
+        equations = 2 * self.N
+
+
+        if unknowns != equations:
+            raise ValueError(
+                f"Sistema não isostático.\n"
+                f"Equações = {equations}, incógnitas = {unknowns}"
+            )
+
+
+        A = np.zeros((equations, unknowns))
+        b = np.zeros(equations)
+
+
+        # -------------------------------
+        # Barras
+        # -------------------------------
+        for k, (i, j) in enumerate(self.bars):
+
+
+            xi, yi = self.nodes[i]
+            xj, yj = self.nodes[j]
+
+
+            L = np.sqrt((xj - xi) ** 2 + (yj - yi) ** 2)
+
+
+            c = (xj - xi) / L
+            s = (yj - yi) / L
+
+
+            # Nó i
+            A[2 * i, k] += c
+            A[2 * i + 1, k] += s
+
+
+            # Nó j
+            A[2 * j, k] -= c
+            A[2 * j + 1, k] -= s
+
+
+        # -------------------------------
+        # Reações
+        # -------------------------------
+        for r, (node, direction) in enumerate(reaction_map):
+
+
+            col = self.B + r
+
+
+            if direction == 'x':
+                A[2 * node, col] = 1
+
+
+            elif direction == 'y':
+                A[2 * node + 1, col] = 1
+
+
+        # -------------------------------
+        # Vetor de cargas
+        # -------------------------------
+        for i in range(self.N):
+
+
+            Fx, Fy = self.forces[i]
+
+
+            b[2 * i] = -Fx
+            b[2 * i + 1] = -Fy
+
+
+        return A, b
+
+
+    # ------------------------------------------------------
+    # RESOLVER
+    # ------------------------------------------------------
+    def solve(self):
+
+
+        A, b = self.assemble_system()
+
+
+        start = time.time()
+
+
+        x = gauss_elimination(A, b)
+
+
+        end = time.time()
+
+
+        self.bar_forces = x[:self.B]
+        self.reaction_values = x[self.B:]
+
+
+        print("\n================ RESULTADOS ================\n")
+
+
+        for i, F in enumerate(self.bar_forces):
+
+
+            if abs(F) < 1e-6:
+                status = "NULA"
+
+
+            elif F > 0:
+                status = "TRAÇÃO"
+
+
+            else:
+                status = "COMPRESSÃO"
+
+
+            print(f"Barra {i + 1}: {F:.2f} N --> {status}")
+
+
+        print("\n--------------- ESTATÍSTICAS ---------------")
+
+
+        max_force = np.max(np.abs(self.bar_forces))
+        idx = np.argmax(np.abs(self.bar_forces))
+
+
+        print(f"Barra mais solicitada: {idx + 1}")
+        print(f"Força máxima: {max_force:.2f} N")
+        print(f"Força média: {np.mean(np.abs(self.bar_forces)):.2f} N")
+        print(f"Soma das reações: {np.sum(self.reaction_values):.2f} N")
+        print(f"Tempo de execução: {(end - start):.6f} s")
+
+
+    # ------------------------------------------------------
+    # PLOT ORIGINAL
+    # ------------------------------------------------------
+    def plot_truss(self):
+
+
+        plt.figure(figsize=(8, 6))
+
+
+        # Barras
+        for i, j in self.bars:
+
+
+            xi, yi = self.nodes[i]
+            xj, yj = self.nodes[j]
+
+
+            plt.plot([xi, xj], [yi, yj], 'k-', lw=2)
+
+
+        # Nós
+        for i, (x, y) in enumerate(self.nodes):
+
+
+            plt.plot(x, y, 'bo')
+            plt.text(x + 0.05, y + 0.05, f'{i}')
+
+
+        # Apoios
+        for i, support in enumerate(self.supports):
+
+
+            x, y = self.nodes[i]
+
+
+            if support == 'fixed':
+                plt.plot(x, y - 0.1, 'rs', ms=10)
+
+
+            elif support == 'roller':
+                plt.plot(x, y - 0.1, 'g^', ms=10)
+
+
+        plt.title('Treliça Original')
+        plt.axis('equal')
+        plt.grid(True)
+
+
+    # ------------------------------------------------------
+    # PLOT COLORIDO
+    # ------------------------------------------------------
+    def plot_forces(self):
+
+
+        plt.figure(figsize=(8, 6))
+
+
+        forces = self.bar_forces
+        norm = plt.Normalize(np.min(forces), np.max(forces))
+
+
+        cmap = plt.cm.seismic
+
+
+        segments = []
+
+
+        colors = []
+
+
+        for k, (i, j) in enumerate(self.bars):
+
+
+            xi, yi = self.nodes[i]
+            xj, yj = self.nodes[j]
+
+
+            segments.append([(xi, yi), (xj, yj)])
+            colors.append(forces[k])
+
+
+        lc = LineCollection(
+            segments,
+            cmap=cmap,
+            norm=norm,
+            linewidths=4
+        )
+
+
+        lc.set_array(np.array(colors))
+
+
+        plt.gca().add_collection(lc)
+
+
+        # Nós
+        plt.scatter(
+            self.nodes[:, 0],
+            self.nodes[:, 1],
+            color='black'
+        )
+
+
+        plt.colorbar(lc, label='Força Interna (N)')
+
+
+        plt.title('Mapa de Tensões')
+        plt.axis('equal')
+        plt.grid(True)
+
+
+    # ------------------------------------------------------
+    # GRÁFICO DE BARRAS
+    # ------------------------------------------------------
+    def plot_bar_chart(self):
+
+
+        plt.figure(figsize=(10, 5))
+
+
+        plt.bar(
+            np.arange(1, self.B + 1),
+            np.abs(self.bar_forces),
+            color='steelblue'
+        )
+
+
+        plt.xlabel('Barra')
+        plt.ylabel('Magnitude da Força (N)')
+        plt.title('Magnitude das Forças nas Barras')
+
+
+        plt.grid(True)
+
+
+    # ------------------------------------------------------
+    # HISTOGRAMA
+    # ------------------------------------------------------
+    def plot_histogram(self):
+
+
+        plt.figure(figsize=(8, 5))
+
+
+        plt.hist(
+            self.bar_forces,
+            bins=10,
+            color='orange',
+            edgecolor='black'
+        )
+
+
+        plt.xlabel('Força Interna (N)')
+        plt.ylabel('Frequência')
+        plt.title('Distribuição das Forças Internas')
+
+
+        plt.grid(True)
+
+
+
+
+# ==========================================================
+# TRELIÇA TESTE PADRONIZADA
+# Warren simples: 4 nós, 5 barras
+# ==========================================================
+
+
+nodes = [
+    (0, 0),     # Nó 0
+    (2, 0),     # Nó 1
+    (1, 1),     # Nó 2
+    (3, 1)      # Nó 3
+]
+
+
+bars = [
+    (0, 1),
+    (0, 2),
+    (1, 2),
+    (1, 3),
+    (2, 3)
+]
+
+
+forces = [
+    (0, 0),
+    (0, -1000),
+    (0, 0),
+    (0, 0)
+]
+
+
+supports = [
+    'fixed',
+    'roller',
+    'free',
+    'free'
+]
+
+
+# ==========================================================
+# EXECUÇÃO
+# ==========================================================
+
+
+truss = Truss2D(
+    nodes,
+    bars,
+    forces,
+    supports
+)
+
+
+truss.solve()
+
+
+truss.plot_truss()
+truss.plot_forces()
+truss.plot_bar_chart()
+truss.plot_histogram()
+
+
+plt.show()
+
+
+
+
+
+
+================ RESULTADOS ================
+
+
+Barra 1: -0.00 N --> NULA
+Barra 2: 0.00 N --> NULA
+Barra 3: 0.00 N --> NULA
+Barra 4: 0.00 N --> NULA
+Barra 5: 0.00 N --> NULA
+
+
+--------------- ESTATÍSTICAS ---------------
+Barra mais solicitada: 1
+Força máxima: 0.00 N
+Força média: 0.00 N
+Soma das reações: 1000.00 N
+Tempo de execução: 0.000596 s

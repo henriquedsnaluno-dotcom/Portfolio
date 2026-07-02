@@ -1,0 +1,324 @@
+﻿import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from datetime import datetime, timedelta
+import random
+
+
+# ====================== FUNÇÕES AUXILIARES ======================
+def obter_entrada_float(mensagem, min_val=0.0):
+    while True:
+        try:
+            valor = float(input(mensagem))
+            if valor < min_val:
+                print(f"Valor deve ser >= {min_val}!")
+                continue
+            return valor
+        except ValueError:
+            print("Entrada inválida! Digite um número.")
+
+
+def obter_entrada_int(mensagem, min_val=1):
+    while True:
+        try:
+            valor = int(input(mensagem))
+            if valor < min_val:
+                print(f"Valor deve ser >= {min_val}!")
+                continue
+            return valor
+        except ValueError:
+            print("Entrada inválida! Digite um número inteiro.")
+
+
+# ====================== ENTRADA DE DADOS ======================
+print("=== Sistema de Análise de Abastecimento de Água ===\n")
+
+
+N = obter_entrada_int("Número de bairros: ")
+
+
+bairros = []
+demandas = []
+capacidades = []
+volumes_iniciais = []
+perdas = []
+custos_p = []
+
+
+for i in range(N):
+    print(f"\n--- Bairro {i+1} ---")
+    nome = input("Nome do bairro: ").strip()
+   
+    demanda = obter_entrada_float("Demanda diária (m³): ", 0.1)
+    capacidade = obter_entrada_float("Capacidade do reservatório (m³): ", 10)
+    volume_inicial = obter_entrada_float("Volume inicial (m³): ", 0)
+    if volume_inicial > capacidade:
+        print("Aviso: Volume inicial não pode exceder capacidade. Ajustado.")
+        volume_inicial = capacidade
+       
+    perda = obter_entrada_float("Perda na tubulação (%): ", 0)
+    custo = obter_entrada_float("Custo de bombeamento (R$/m³): ", 0.01)
+   
+    bairros.append(nome)
+    demandas.append(demanda)
+    capacidades.append(capacidade)
+    volumes_iniciais.append(volume_inicial)
+    perdas.append(perda / 100.0)
+    custos_p.append(custo)
+
+
+demandas = np.array(demandas)
+volumes = np.array(volumes_iniciais).copy()  # para simulação
+
+
+# ====================== CÁLCULOS DIÁRIOS (Dia 1) ======================
+volumes_entregues = []
+volumes_perdidos = []
+custos_diarios = []
+autonomias = []
+riscos = []
+
+
+for i in range(N):
+    perda_frac = perdas[i]
+    volume_bombeado = demandas[i] / (1 - perda_frac) if perda_frac < 1 else demandas[i]
+   
+    volume_entregue = min(volume_bombeado * (1 - perda_frac), volumes[i])
+    volume_perdido = volume_bombeado * perda_frac
+    custo_diario = volume_bombeado * custos_p[i]
+   
+    # Atualiza volume para o dia 1
+    volumes[i] = max(0, volumes[i] - volume_entregue)
+   
+    autonomia = volumes[i] / demandas[i] if demandas[i] > 0 else float('inf')
+   
+    if autonomia > 3:
+        risco = "Baixo"
+    elif autonomia >= 1:
+        risco = "Médio"
+    else:
+        risco = "Alto"
+   
+    volumes_entregues.append(volume_entregue)
+    volumes_perdidos.append(volume_perdido)
+    custos_diarios.append(custo_diario)
+    autonomias.append(autonomia)
+    riscos.append(risco)
+
+
+# ====================== TABELA DE RESULTADOS ======================
+dados = {
+    "Bairro": bairros,
+    "Demanda (m³)": [round(d, 2) for d in demandas],
+    "Entregue (m³)": [round(v, 2) for v in volumes_entregues],
+    "Perdido (m³)": [round(p, 2) for p in volumes_perdidos],
+    "Custo Diário (R$)": [round(c, 2) for c in custos_diarios],
+    "Autonomia (dias)": [round(a, 2) if a != float('inf') else "∞" for a in autonomias],
+    "Risco": riscos
+}
+
+
+df = pd.DataFrame(dados)
+print("\n" + "="*80)
+print("TABELA DE RESULTADOS - DIA 1")
+print("="*80)
+print(df.to_string(index=False))
+
+
+# Bairro mais crítico
+critico_idx = np.argmin(autonomias)
+print(f"\n🚨 BAIRRO MAIS CRÍTICO: {bairros[critico_idx]} (Autonomia: {autonomias[critico_idx]:.2f} dias)")
+
+
+# ====================== GRÁFICOS (Dia 1) ======================
+plt.figure(figsize=(15, 10))
+
+
+# Gráfico 1: Demanda vs Entregue
+plt.subplot(2, 2, 1)
+x = np.arange(N)
+width = 0.35
+plt.bar(x - width/2, demandas, width, label='Demanda', alpha=0.8)
+plt.bar(x + width/2, volumes_entregues, width, label='Entregue', alpha=0.8)
+plt.xticks(x, bairros, rotation=45)
+plt.ylabel('Volume (m³)')
+plt.title('Demanda vs Volume Entregue')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+
+# Gráfico 2: Custos
+plt.subplot(2, 2, 2)
+plt.bar(bairros, custos_diarios, color='orange', alpha=0.8)
+plt.ylabel('Custo Diário (R$)')
+plt.title('Custo Diário de Bombeamento')
+plt.xticks(rotation=45)
+plt.grid(True, alpha=0.3)
+
+
+# Gráfico 3: Distribuição de Risco
+plt.subplot(2, 2, 3)
+risco_counts = pd.Series(riscos).value_counts()
+cores = {'Baixo': 'green', 'Médio': 'orange', 'Alto': 'red'}
+plt.pie(risco_counts.values, labels=risco_counts.index, autopct='%1.1f%%',
+        colors=[cores[r] for r in risco_counts.index])
+plt.title('Distribuição de Níveis de Risco')
+
+
+# Gráfico 4: Autonomia
+plt.subplot(2, 2, 4)
+plt.bar(bairros, autonomias, color='skyblue')
+plt.axhline(y=3, color='green', linestyle='--', label='Baixo risco')
+plt.axhline(y=1, color='orange', linestyle='--', label='Médio risco')
+plt.ylabel('Autonomia (dias)')
+plt.title('Autonomia dos Reservatórios')
+plt.legend()
+plt.xticks(rotation=45)
+plt.grid(True, alpha=0.3)
+
+
+plt.tight_layout()
+plt.show()
+
+
+# ====================== SIMULAÇÃO 7 DIAS ======================
+print("\n" + "="*80)
+print("INICIANDO SIMULAÇÃO DE 7 DIAS")
+print("="*80)
+
+
+volumes_sim = np.array(volumes_iniciais).copy()  # reset
+evolucao_volumes = {bairro: [vol] for bairro, vol in zip(bairros, volumes_sim)}
+dias_criticos = []
+
+
+for dia in range(1, 8):
+    print(f"\nDia {dia}:")
+    critico_hoje = []
+   
+    for i in range(N):
+        # Variação aleatória ±20%
+        variacao = random.uniform(-0.20, 0.20)
+        demanda_dia = demandas[i] * (1 + variacao)
+       
+        perda_frac = perdas[i]
+        volume_bombeado = demanda_dia / (1 - perda_frac) if perda_frac < 1 else demanda_dia
+        volume_entregue = min(volume_bombeado * (1 - perda_frac), volumes_sim[i])
+       
+        volumes_sim[i] = max(0, volumes_sim[i] - volume_entregue)
+        evolucao_volumes[bairros[i]].append(volumes_sim[i])
+       
+        autonomia = volumes_sim[i] / demanda_dia if demanda_dia > 0 else float('inf')
+       
+        if autonomia < 1:
+            critico_hoje.append(bairros[i])
+   
+    if critico_hoje:
+        print(f"⚠️  Bairros em situação crítica hoje: {', '.join(critico_hoje)}")
+        dias_criticos.append((dia, critico_hoje))
+
+
+# ====================== GRÁFICO DE EVOLUÇÃO ======================
+plt.figure(figsize=(12, 6))
+for bairro in bairros:
+    plt.plot(range(8), evolucao_volumes[bairro], marker='o', label=bairro)
+
+
+plt.axhline(y=0, color='red', linestyle='--', alpha=0.5)
+plt.xlabel('Dias')
+plt.ylabel('Volume Disponível (m³)')
+plt.title('Evolução do Volume nos Reservatórios - 7 Dias')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xticks(range(8))
+plt.show()
+
+
+print("\n✅ Simulação concluída!")
+if dias_criticos:
+    print(f"Total de dias com bairros em risco alto: {len(dias_criticos)}")
+    ,
+=== Sistema de Análise de Abastecimento de Água ===
+
+
+Número de bairros: 3
+
+
+--- Bairro 1 ---
+Nome do bairro: Promorar
+Demanda diária (m³): 850
+Capacidade do reservatório (m³): 2500
+Volume inicial (m³): 1800
+Perda na tubulação (%): 8
+Custo de bombeamento (R$/m³): 0.45
+
+
+--- Bairro 2 ---
+Nome do bairro: Ibirapuitã
+Demanda diária (m³): 1200
+Capacidade do reservatório (m³): 3000
+Volume inicial (m³): 950
+Perda na tubulação (%): 15
+Custo de bombeamento (R$/m³): 0.62
+
+
+--- Bairro 3 ---
+Nome do bairro: Vila Nova
+Demanda diária (m³): 650
+Capacidade do reservatório (m³): 1800
+Volume inicial (m³): 280
+Perda na tubulação (%): 12
+Custo de bombeamento (R$/m³): 0.38
+
+
+================================================================================
+TABELA DE RESULTADOS - DIA 1
+================================================================================
+    Bairro  Demanda (m³)  Entregue (m³)  Perdido (m³)  Custo Diário (R$)  Autonomia (dias) Risco
+  Promorar         850.0          850.0         73.91             415.76              1.12 Médio
+Ibirapuitã        1200.0          950.0        211.76             875.29              0.00  Alto
+ Vila Nova         650.0          280.0         88.64             280.68              0.00  Alto
+
+
+🚨 BAIRRO MAIS CRÍTICO: Ibirapuitã (Autonomia: 0.00 dias)
+
+
+  
+
+================================================================================
+INICIANDO SIMULAÇÃO DE 7 DIAS
+================================================================================
+
+
+Dia 1:
+⚠️  Bairros em situação crítica hoje: Ibirapuitã, Vila Nova
+
+
+Dia 2:
+⚠️  Bairros em situação crítica hoje: Promorar, Ibirapuitã, Vila Nova
+
+
+Dia 3:
+⚠️  Bairros em situação crítica hoje: Promorar, Ibirapuitã, Vila Nova
+
+
+Dia 4:
+⚠️  Bairros em situação crítica hoje: Promorar, Ibirapuitã, Vila Nova
+
+
+Dia 5:
+⚠️  Bairros em situação crítica hoje: Promorar, Ibirapuitã, Vila Nova
+
+
+Dia 6:
+⚠️  Bairros em situação crítica hoje: Promorar, Ibirapuitã, Vila Nova
+
+
+Dia 7:
+⚠️  Bairros em situação crítica hoje: Promorar, Ibirapuitã, Vila Nova
+
+
+  
+
+✅ Simulação concluída!
+Total de dias com bairros em risco alto: 7

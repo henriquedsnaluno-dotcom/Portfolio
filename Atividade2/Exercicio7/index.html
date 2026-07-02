@@ -1,0 +1,27 @@
+﻿# Programa para calcular a resistência equivalente em série e paralelo e a média
+N = int(input("Digite o número de resistências: "))
+
+
+resistencias = []
+for i in range(N):
+    R = float(input(f"Digite o valor da resistência {i+1} (em Ohms): "))
+    resistencias.append(R)
+
+
+# Cálculo da resistência equivalente em série
+soma_equivalente = sum(resistencias)
+
+
+# Cálculo da resistência equivalente em paralelo
+req_paralelo = sum(1 / R for R in resistencias)
+req_paralelo = 1 / req_paralelo if req_paralelo != 0 else 0
+
+
+# Cálculo da média
+media = soma_equivalente / N if N > 0 else 0
+
+
+# Exibição dos resultados
+print(f"Soma das resistências (equivalente série): {soma_equivalente:.2f} Ohms")
+print(f"Resistência equivalente (paralela): {req_paralelo:.2f} Ohms")
+print(f"Média das resistências: {media:.2f} Ohms")

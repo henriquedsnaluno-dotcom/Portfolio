@@ -1,0 +1,163 @@
+﻿Lista de 10 Exercícios gerado pela LLM: Gemini
+
+
+1 Lei de Ohm Automatizada: Crie um algoritmo que peça ao utilizador para escolher o que deseja calcular (Tensão $V$, Corrente $I$ ou Resistência $R$). Com base na escolha e nos dois valores fornecidos, o programa deve aplicar a fórmula $V = I \cdot R$ e exibir o resultado.
+
+
+2 Análise de Resistores em Paralelo: Escreva um algoritmo que receba o valor de $n$ resistores e calcule a resistência equivalente ($R_{eq}$) do circuito em paralelo, utilizando a fórmula:
+$$\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \dots + \frac{1}{R_n}$$
+
+
+3 Conversor Estrela-Triângulo: Desenvolva um programa que receba as três impedâncias de uma carga em configuração Estrela ($Z_a, Z_b, Z_c$) e calcule os valores correspondentes para uma configuração Triângulo ($Z_{ab}, Z_{bc}, Z_{ca}$).
+
+
+4 Cálculo de Fator de Potência: Crie um algoritmo que receba a Potência Ativa ($P$ em Watts) e a Potência Reativa ($Q$ em VAR). O programa deve calcular a Potência Aparente ($S$) e o Fator de Potência ($\cos \phi$), indicando se a carga é puramente resistiva caso o fator seja 1.
+
+
+5 Dimensionamento de Condutores: Escreva um algoritmo que receba a corrente de projeto ($I_b$) e o método de instalação. O programa deve consultar uma tabela interna (simulada com condicionais) para sugerir a seção mínima do cabo em $mm^2$ para evitar sobreaquecimento.
+
+
+6 Simulador de Queda de Tensão: Elabore um algoritmo que calcule a queda de tensão em um trecho de condutor. O utilizador deve fornecer a corrente, o comprimento do cabo, a resistividade do material e a seção transversal. O programa deve dizer se a queda está dentro do limite permitido (ex: 4%).
+
+
+7 Análise de Harmónicos (Simples): Crie um programa que receba os valores eficazes das correntes das harmónicas (até à 5ª ordem) e calcule a Distorção Harmónica Total ($THD_i$) do sistema.
+
+
+8 Verificador de Consumo Energético: Escreva um algoritmo que receba a potência de vários eletrodomésticos e o tempo de uso diário de cada um. O programa deve calcular o consumo mensal em $kWh$ e o custo estimado com base no valor da tarifa elétrica.
+
+
+9 Lógica de Semáforo (Automação): Desenvolva a lógica de um controlador de semáforo. O algoritmo deve gerir o tempo de cada luz (Verde, Amarelo, Vermelho) e incluir uma condição de interrupção para um botão de pedestres.
+
+
+10 Raízes de Equação Característica: Para análise de sistemas de controlo, crie um algoritmo que receba os coeficientes de uma equação de 2º grau ($as^2 + bs + c = 0$) e determine se o sistema é Sobreamortecido, Criticamente Amortecido ou Subamortecido com base no valor do discriminante ($\Delta$).
+
+
+Codigo Python: 
+1)
+print("--- Calculadora Lei de Ohm ---")
+escolha = input("O que deseja calcular? (V, I, R): ").upper()
+if escolha == "V":
+    i = float(input("Corrente (I) em Amperes: "))
+    r = float(input("Resistência (R) em Ohms: "))
+    print(f"Tensão: {i * r:.2f} V")
+elif escolha == "I":
+    v = float(input("Tensão (V) em Volts: "))
+    r = float(input("Resistência (R) em Ohms: "))
+    print(f"Corrente: {v / r:.2f} A")
+elif escolha == "R":
+    v = float(input("Tensão (V) em Volts: "))
+    i = float(input("Corrente (I) em Amperes: "))
+    print(f"Resistência: {v / i:.2f} Ω")
+
+
+2)
+n = int(input("Quantos resistores em paralelo? "))
+soma_inversos = 0
+for k in range(n):
+    r = float(input(f"Valor do resistor {k+1} (Ω): "))
+    soma_inversos += 1/r
+req = 1 / soma_inversos
+print(f"Resistência Equivalente: {req:.2f} Ω")
+
+
+3)
+print("Conversão Estrela (Za, Zb, Zc) -> Triângulo (Zab, Zbc, Zca)")
+za = float(input("Za: "))
+zb = float(input("Zb: "))
+zc = float(input("Zc: "))
+numerador = (za*zb + zb*zc + zc*za)
+zab = numerador / zc
+zbc = numerador / za
+zca = numerador / zb
+print(f"Resultados: Zab={zab:.2f}, Zbc={zbc:.2f}, Zca={zca:.2f}")
+
+
+4)
+import math
+p = float(input("Potência Ativa (W): "))
+q = float(input("Potência Reativa (VAR): "))
+s = math.sqrt(p**2 + q**2)
+fp = p / s
+print(f"Potência Aparente: {s:.2f} VA")
+print(f"Fator de Potência: {fp:.3f}")
+if fp == 1: print("Carga Puramente Resistiva")
+
+
+5)
+ib = float(input("Corrente de projeto (A): "))
+# Tabela simplificada: Seção (mm2) -> Capacidade (A)
+tabela = {1.5: 15.5, 2.5: 21, 4: 28, 6: 36, 10: 50}
+sugerido = None
+for secao, capacidade in tabela.items():
+    if capacidade >= ib:
+        sugerido = secao
+        break
+if sugerido:
+    print(f"Seção mínima sugerida: {sugerido} mm²")
+else:
+    print("Corrente acima do limite desta tabela simplificada.")
+
+
+6)
+# Fórmula: deltaV = (2 * L * rho * I) / S
+l = float(input("Comprimento do cabo (m): "))
+i = float(input("Corrente (A): "))
+s = float(input("Seção do cabo (mm2): "))
+rho = 0.0178 # Cobre em ohm*mm2/m
+dV = (2 * l * rho * i) / s
+v_fonte = 230
+percentual = (dV / v_fonte) * 100
+print(f"Queda de tensão: {dV:.2f}V ({percentual:.2f}%)")
+if percentual > 4: print("ALERTA: Queda superior a 4%!")
+
+
+7) 
+import math
+fundamental = float(input("Corrente da Fundamental (1ª): "))
+soma_quadrados_harmonicos = 0
+for h in range(2, 6):
+    corrente = float(input(f"Corrente da {h}ª harmónica: "))
+    soma_quadrados_harmonicos += corrente**2
+thd = (math.sqrt(soma_quadrados_harmonicos) / fundamental) * 100
+print(f"THDi: {thd:.2f}%")
+
+
+8) 
+n = int(input("Número de aparelhos: "))
+tarifa = float(input("Preço por kWh (€): "))
+consumo_total = 0
+for _ in range(n):
+    watts = float(input("Potência (W): "))
+    horas = float(input("Horas de uso/dia: "))
+    consumo_total += (watts * horas * 30) / 1000
+print(f"Consumo Mensal: {consumo_total:.2f} kWh")
+print(f"Custo Estimado: {consumo_total * tarifa:.2f} €")
+
+
+9) import time
+def semaforo():
+    while True:
+        print("VERDE (10s)")
+        time.sleep(10)
+        print("AMARELO (3s)")
+        time.sleep(3)
+        print("VERMELHO (10s)")
+        time.sleep(10)
+        # Para interromper no terminal, use Ctrl+C
+        break # Remova o break para rodar infinitamente
+semaforo()
+
+
+10) 
+import math
+print("Análise de as^2 + bs + c = 0")
+a = float(input("a: "))
+b = float(input("b: "))
+c = float(input("c: "))
+delta = b**2 - 4*a*c
+if delta > 0:
+    print("Sistema Sobreamortecido (Duas raízes reais)")
+elif delta == 0:
+    print("Sistema Criticamente Amortecido (Raízes reais iguais)")
+else:
+    print("Sistema Subamortecido (Raízes complexas)")

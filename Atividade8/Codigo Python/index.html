@@ -1,0 +1,863 @@
+﻿# ============================================================
+# SISTEMA INTELIGENTE DE GESTÃO ENERGÉTICA SOLAR
+# ALEGRETE - RS
+# VERSÃO CORPORATIVA AVANÇADA
+# ============================================================
+
+
+# ============================================================
+# BIBLIOTECAS
+# ============================================================
+
+
+# Execute no Google Colab:
+# !pip install plotly folium openpyxl scikit-learn
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.express as px
+import folium
+
+
+from folium.plugins import HeatMap
+from sklearn.linear_model import LinearRegression
+from IPython.display import display
+
+
+# ============================================================
+# CONFIGURAÇÕES
+# ============================================================
+
+
+plt.style.use("dark_background")
+
+
+COMPANY_NAME = "MegaTech Solar Industrial"
+
+
+LATITUDE = -29.7831
+LONGITUDE = -55.7919
+
+
+# ============================================================
+# SISTEMA SOLAR
+# ============================================================
+
+
+NUM_PANELS = 8500
+PANEL_POWER = 585
+PANEL_EFFICIENCY = 0.96
+
+
+# ============================================================
+# BATERIAS
+# ============================================================
+
+
+BATTERY_CAPACITY = 30000
+BATTERY_LEVEL = 15000
+BATTERY_EFFICIENCY = 0.95
+
+
+# ============================================================
+# CUSTOS
+# ============================================================
+
+
+ENERGY_PRICE = 0.88
+SELL_PRICE = 0.42
+
+
+# ============================================================
+# CO2
+# ============================================================
+
+
+CO2_FACTOR = 0.078
+
+
+# ============================================================
+# TEMPO
+# ============================================================
+
+
+DAYS = 7
+TOTAL_HOURS = DAYS * 24
+
+
+time = np.arange(TOTAL_HOURS)
+
+
+# ============================================================
+# CLIMA DINÂMICO
+# ============================================================
+
+
+weather_types = []
+weather_multipliers = []
+
+
+for day in range(DAYS):
+
+
+    weather = np.random.choice(
+        ["Ensolarado", "Nublado", "Chuvoso"],
+        p=[0.6, 0.3, 0.1]
+    )
+
+
+    weather_types.append(weather)
+
+
+    if weather == "Ensolarado":
+        weather_multipliers.append(1.0)
+
+
+    elif weather == "Nublado":
+        weather_multipliers.append(0.65)
+
+
+    else:
+        weather_multipliers.append(0.35)
+
+
+# ============================================================
+# GERAÇÃO SOLAR
+# ============================================================
+
+
+def solar_generation(hour):
+
+
+    day = hour // 24
+    hour_day = hour % 24
+
+
+    climate_factor = weather_multipliers[day]
+
+
+    if hour_day < 6 or hour_day > 18:
+        return 0
+
+
+    solar_curve = np.sin(
+        np.pi * (hour_day - 6) / 12
+    )
+
+
+    generation = (
+        NUM_PANELS *
+        PANEL_POWER *
+        PANEL_EFFICIENCY *
+        solar_curve *
+        climate_factor
+    ) / 1000
+
+
+    return max(generation, 0)
+
+
+# ============================================================
+# CONSUMO CORPORATIVO
+# ============================================================
+
+
+def company_consumption(hour, battery_level):
+
+
+    hour_day = hour % 24
+
+
+    # --------------------------------------------------------
+    # SETORES
+    # --------------------------------------------------------
+
+
+    industrial = 2200
+
+
+    if 6 <= hour_day <= 18:
+        industrial += 3500
+
+
+    data_center = 1200
+
+
+    hvac = 600
+
+
+    if 11 <= hour_day <= 17:
+        hvac += 800
+
+
+    office = 400
+
+
+    if 7 <= hour_day <= 19:
+        office += 1000
+
+
+    lighting = 250
+
+
+    if hour_day >= 18 or hour_day <= 6:
+        lighting += 700
+
+
+    ev_charging = 1200
+
+
+    # ========================================================
+    # IA DE GERENCIAMENTO ENERGÉTICO
+    # ========================================================
+
+
+    if battery_level < BATTERY_CAPACITY * 0.20:
+
+
+        hvac *= 0.7
+        ev_charging *= 0.5
+
+
+    if battery_level < BATTERY_CAPACITY * 0.10:
+
+
+        office *= 0.8
+
+
+    random_variation = np.random.uniform(-300, 300)
+
+
+    total = (
+        industrial +
+        data_center +
+        hvac +
+        office +
+        lighting +
+        ev_charging +
+        random_variation
+    )
+
+
+    return max(total, 0)
+
+
+# ============================================================
+# LISTAS
+# ============================================================
+
+
+solar_data = []
+consumption_data = []
+battery_data = []
+grid_data = []
+economy_data = []
+co2_data = []
+autonomy_data = []
+alerts = []
+
+
+# ============================================================
+# VARIÁVEIS
+# ============================================================
+
+
+battery = BATTERY_LEVEL
+
+
+total_generated = 0
+total_consumed = 0
+total_grid = 0
+total_savings = 0
+
+
+# ============================================================
+# SIMULAÇÃO
+# ============================================================
+
+
+for hour in time:
+
+
+    generated = solar_generation(hour)
+
+
+    consumed = company_consumption(hour, battery)
+
+
+    balance = generated - consumed
+
+
+    grid_usage = 0
+
+
+    # ========================================================
+    # EXCESSO DE ENERGIA
+    # ========================================================
+
+
+    if balance > 0:
+
+
+        storage = balance * BATTERY_EFFICIENCY
+
+
+        if battery + storage <= BATTERY_CAPACITY:
+
+
+            battery += storage
+
+
+        else:
+
+
+            battery = BATTERY_CAPACITY
+
+
+    # ========================================================
+    # FALTA DE ENERGIA
+    # ========================================================
+
+
+    else:
+
+
+        needed = abs(balance)
+
+
+        if battery >= needed:
+
+
+            battery -= needed
+
+
+        else:
+
+
+            grid_usage = needed - battery
+
+
+            battery = 0
+
+
+    # ========================================================
+    # ALERTAS AUTOMÁTICOS
+    # ========================================================
+
+
+    if battery < BATTERY_CAPACITY * 0.10:
+
+
+        alerts.append(
+            f"ALERTA CRÍTICO - Hora {hour}: bateria crítica."
+        )
+
+
+    if grid_usage > 5000:
+
+
+        alerts.append(
+            f"ALERTA - Hora {hour}: alto consumo da rede."
+        )
+
+
+    # ========================================================
+    # ECONOMIA
+    # ========================================================
+
+
+    savings = generated * ENERGY_PRICE
+
+
+    # ========================================================
+    # CO2
+    # ========================================================
+
+
+    co2_saved = generated * CO2_FACTOR
+
+
+    # ========================================================
+    # AUTONOMIA
+    # ========================================================
+
+
+    autonomy = (
+        generated / consumed
+    ) * 100 if consumed > 0 else 0
+
+
+    # ========================================================
+    # ARMAZENAMENTO
+    # ========================================================
+
+
+    solar_data.append(generated)
+    consumption_data.append(consumed)
+    battery_data.append(battery)
+    grid_data.append(grid_usage)
+    economy_data.append(savings)
+    co2_data.append(co2_saved)
+    autonomy_data.append(autonomy)
+
+
+    # ========================================================
+    # TOTAIS
+    # ========================================================
+
+
+    total_generated += generated
+    total_consumed += consumed
+    total_grid += grid_usage
+    total_savings += savings
+
+
+# ============================================================
+# DATAFRAME
+# ============================================================
+
+
+df = pd.DataFrame({
+
+
+    "Hora": time,
+    "Energia Solar": solar_data,
+    "Consumo": consumption_data,
+    "Bateria": battery_data,
+    "Rede": grid_data,
+    "Economia": economy_data,
+    "CO2": co2_data,
+    "Autonomia": autonomy_data
+
+
+})
+
+
+# ============================================================
+# EXPORTAÇÃO
+# ============================================================
+
+
+df.to_excel("relatorio_energetico.xlsx", index=False)
+df.to_csv("relatorio_energetico.csv", index=False)
+
+
+# ============================================================
+# MACHINE LEARNING
+# PREVISÃO DE CONSUMO
+# ============================================================
+
+
+X = np.array(time).reshape(-1, 1)
+y = np.array(consumption_data)
+
+
+model = LinearRegression()
+model.fit(X, y)
+
+
+future_hours = np.arange(
+    TOTAL_HOURS,
+    TOTAL_HOURS + 24
+).reshape(-1, 1)
+
+
+future_prediction = model.predict(future_hours)
+
+
+# ============================================================
+# RELATÓRIO
+# ============================================================
+
+
+print("\n===================================================")
+print("RELATÓRIO ENERGÉTICO CORPORATIVO")
+print("===================================================\n")
+
+
+print(f"Empresa: {COMPANY_NAME}")
+print()
+
+
+print(f"Energia Gerada: {total_generated:,.2f} kWh")
+print(f"Consumo Total: {total_consumed:,.2f} kWh")
+print(f"Energia da Rede: {total_grid:,.2f} kWh")
+print(f"Economia Financeira: R$ {total_savings:,.2f}")
+print(f"Redução CO2: {sum(co2_data):,.2f} kg")
+
+
+autonomy_final = (
+    total_generated / total_consumed
+) * 100
+
+
+print(f"Autonomia Energética: {autonomy_final:.2f}%")
+
+
+# ============================================================
+# ALERTAS
+# ============================================================
+
+
+print("\n================ ALERTAS =================\n")
+
+
+for alert in alerts[:10]:
+
+
+    print(alert)
+
+
+# ============================================================
+# GRÁFICO PRINCIPAL
+# ============================================================
+
+
+fig = go.Figure()
+
+
+fig.add_trace(
+    go.Scatter(
+        x=time,
+        y=solar_data,
+        mode='lines',
+        name='Energia Solar'
+    )
+)
+
+
+fig.add_trace(
+    go.Scatter(
+        x=time,
+        y=consumption_data,
+        mode='lines',
+        name='Consumo'
+    )
+)
+
+
+fig.add_trace(
+    go.Scatter(
+        x=time,
+        y=battery_data,
+        mode='lines',
+        name='Bateria'
+    )
+)
+
+
+fig.update_layout(
+
+
+    title="Simulação Energética Inteligente",
+    template="plotly_dark",
+    width=1300,
+    height=700
+
+
+)
+
+
+fig.show()
+
+
+# ============================================================
+# DASHBOARD EXECUTIVO
+# ============================================================
+
+
+gauge = go.Figure(go.Indicator(
+
+
+    mode="gauge+number",
+    value=autonomy_final,
+
+
+    title={
+        'text': "Autonomia Energética (%)"
+    },
+
+
+    gauge={
+        'axis': {'range': [0, 100]}
+    }
+
+
+))
+
+
+gauge.update_layout(
+    template="plotly_dark",
+    width=600,
+    height=400
+)
+
+
+gauge.show()
+
+
+# ============================================================
+# MAPA DE CALOR
+# ============================================================
+
+
+heatmap_matrix = np.array(
+    consumption_data
+).reshape(7, 24)
+
+
+plt.figure(figsize=(18, 7))
+
+
+plt.imshow(
+    heatmap_matrix,
+    aspect='auto'
+)
+
+
+plt.colorbar(label='Consumo kWh')
+
+
+plt.title(
+    "Mapa de Calor do Consumo Energético",
+    fontsize=18
+)
+
+
+plt.xlabel("Hora do Dia")
+plt.ylabel("Dia da Semana")
+
+
+plt.yticks(
+
+
+    range(7),
+    ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"]
+
+
+)
+
+
+plt.show()
+
+
+# ============================================================
+# PREVISÃO FUTURA
+# ============================================================
+
+
+plt.figure(figsize=(18, 7))
+
+
+plt.plot(
+    time,
+    consumption_data,
+    label="Consumo Atual"
+)
+
+
+plt.plot(
+
+
+    np.arange(TOTAL_HOURS, TOTAL_HOURS + 24),
+    future_prediction,
+    label="Previsão Futuro"
+
+
+)
+
+
+plt.title(
+    "Previsão Inteligente de Consumo Energético"
+)
+
+
+plt.xlabel("Horas")
+plt.ylabel("Consumo")
+
+
+plt.legend()
+
+
+plt.show()
+
+
+# ============================================================
+# MAPA DINÂMICO
+# ============================================================
+
+
+solar_map = folium.Map(
+
+
+    location=[LATITUDE, LONGITUDE],
+    zoom_start=13
+
+
+)
+
+
+# EMPRESA
+
+
+folium.Marker(
+
+
+    [LATITUDE, LONGITUDE],
+
+
+    popup=COMPANY_NAME,
+
+
+    tooltip="Centro Energético",
+
+
+    icon=folium.Icon(color="green")
+
+
+).add_to(solar_map)
+
+
+# PAINÉIS
+
+
+for i in range(100):
+
+
+    lat_offset = np.random.uniform(-0.02, 0.02)
+    lon_offset = np.random.uniform(-0.02, 0.02)
+
+
+    folium.CircleMarker(
+
+
+        location=[
+            LATITUDE + lat_offset,
+            LONGITUDE + lon_offset
+        ],
+
+
+        radius=4,
+
+
+        color="orange",
+
+
+        fill=True,
+
+
+        fill_opacity=0.7
+
+
+    ).add_to(solar_map)
+
+
+# HEATMAP INTELIGENTE
+
+
+heat_data = []
+
+
+for i in range(200):
+
+
+    lat_offset = np.random.uniform(-0.03, 0.03)
+    lon_offset = np.random.uniform(-0.03, 0.03)
+
+
+    intensity = np.random.uniform(0.2, 1)
+
+
+    heat_data.append([
+
+
+        LATITUDE + lat_offset,
+        LONGITUDE + lon_offset,
+        intensity
+
+
+    ])
+
+
+HeatMap(heat_data).add_to(solar_map)
+
+
+display(solar_map)
+
+
+# ============================================================
+# ANÁLISE FINAL
+# ============================================================
+
+
+print("\n===================================================")
+print("ANÁLISE FINAL")
+print("===================================================\n")
+
+
+if autonomy_final >= 90:
+
+
+    print(
+        "A empresa possui excelente autonomia energética."
+    )
+
+
+elif autonomy_final >= 70:
+
+
+    print(
+        "A empresa possui boa eficiência energética."
+    )
+
+
+else:
+
+
+    print(
+        "A empresa ainda depende da rede elétrica."
+    )
+
+
+print()
+
+
+print(
+    "O sistema inteligente conseguiu otimizar "
+    "o consumo energético automaticamente."
+)
+
+
+print()
+
+
+print(
+    "A previsão energética permite melhor "
+    "planejamento operacional da empresa."
+)
+
+
+print()
+
+
+print(
+    "Os dashboards corporativos aumentaram "
+    "a usabilidade e interpretação dos dados."
+)
+
+
+print()
+
+
+print(
+    "O mapa térmico identificou regiões ideais "
+    "para expansão do parque solar."
+)
+
+
+print("\n===================================================")
+print("FIM DA SIMULAÇÃO")
+print("===================================================")

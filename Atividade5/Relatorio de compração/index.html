@@ -1,0 +1,52 @@
+﻿Relatório Crítico Comparativo: Soluções Geradas por LLMs 
+Problema: Sistema de Análise de Abastecimento de Água com simulação de 7 dias e variação de demanda de ±20%. Soluções avaliadas: Grok, Gemini e Lovable IA. 
+1. Critérios de avaliação 
+Foram considerados sete critérios objetivos extraídos do código e da execução de cada solução: (i) correção do modelo físico (consumo do reservatório, perdas e custo); (ii) aderência ao enunciado (variação ±20%, classificação de risco, simulação de 7 dias, gráficos); (iii) robustez da entrada (validações, tratamento de exceções); (iv) organização do código (modularização em funções); (v) qualidade da saída (tabelas, gráficos, alertas); (vi) realismo da simulação (sem reabastecimento absurdo nem dupla contagem) e (vii) reprodutibilidade. 
+2. Análise das três soluções 
+Grok. Estrutura procedural longa, sem encapsulamento em funções principais. Possui validação de entradas e ajuste de volume inicial à capacidade. Calcula corretamente o volume bombeado a partir da demanda e da perda (demanda/(1-perda)), o que é fisicamente coerente. Porém, no laço de cálculo do Dia 1 ele usa min(volume_bombeado*(1-perda), volumes[i]), deduzindo do reservatório o que já foi bombeado em vez de tratar bombeamento e estoque como fluxos distintos — isso provoca o esgotamento imediato dos bairros 'Ibirapuitã' e 'Vila Nova' já no Dia 1 (autonomia 0,00). Além disso, na simulação dos 7 dias não acumula custo total e repete avisos genéricos sem indicar volume residual. Apresenta 4 gráficos no Dia 1 (demanda × entregue, custo, pizza de risco e autonomia) — o conjunto visual mais rico das três. 
+Gemini. Apresenta um erro conceitual grave logo no cálculo inicial: vol_entregue = demanda + vol_perdido — soma a perda à demanda e em seguida cobra custo sobre esse total, inflando artificialmente o custo diário (ex.: Morada Nova R$ 11.250/dia). A simulação dos 7 dias subtrai o consumo do volume anterior sem nenhum reabastecimento, o que o próprio comentário do código admite como simplificação. Não há classificação de risco durante a simulação, apenas alertas binários, e o relatório final é pobre (sem custo acumulado nem ranking). Modularização parcial e validação de entrada apenas para valores negativos. 
+Lovable IA. Código totalmente modularizado em funções (ler_float, ler_int, classificar_risco, entrada_dados, calcular_dia, simular, relatorio, grafico_evolucao, main) com guarda __name__ == "__main__". Validações tratam vírgula decimal, valores zero permitidos quando faz sentido (perda, custo) e limitam volume inicial à capacidade. O modelo do dia separa corretamente entregue, perdido e custo, e o consumo do reservatório é limitado pelo volume disponível (min(dem_dia, volume)), evitando volumes negativos sem mascarar a física. A simulação imprime tabela formatada por dia com demanda, volume final, custo, autonomia e risco, acumula o custo total (R$ 10.691,14 no exemplo) e identifica o bairro mais crítico por contagem de ocorrências — métrica objetiva, não arbitrária. Pequena limitação: gera apenas o gráfico de evolução, sem os gráficos do Dia 1. 
+3. Quadro comparativo (0 a 3) 
+Critério 
+	Grok 
+	Gemini 
+	Lovable IA
+	Correção do modelo físico 
+	2 
+	1 
+	3
+	Aderência ao enunciado (±20%, risco, 7 dias) 
+	2 
+	2 
+	3
+	Robustez de entrada 
+	2 
+	1 
+	3
+	Modularização 
+	1 
+	2 
+	3
+	Qualidade dos gráficos 
+	3 
+	2 
+	2
+	Relatório final (custo total, ranking) 
+	1 
+	1 
+	3
+	Realismo da simulação 
+	1 
+	1 
+	3
+	Total 
+	12 
+	10 
+	20
+	
+
+
+
+4. Conclusão e escolha justificada
+A solução da Lovable IA é a melhor entre as três. A escolha apoia-se em evidências objetivas: (a) é a única que separa corretamente os fluxos de água entregue, perdida e o consumo do reservatório, sem dupla contagem como ocorre no Gemini (demanda + perda) nem confusão entre bombeamento e estoque como no Grok; (b) é a única que entrega um relatório final completo, com custo acumulado dos 7 dias (R$ 10.691,14 no exemplo) e ranking objetivo do bairro mais crítico por número de ocorrências; (c) tem a melhor engenharia de software — funções coesas, ponto de entrada protegido, validações que aceitam vírgula como separador decimal e tratam corretamente os campos onde zero é válido; (d) sua simulação é a mais realista, limitando o consumo ao volume disponível sem produzir valores negativos nem mascarar o esgotamento. O Grok é vice-líder graças aos quatro gráficos do Dia 1, mas perde pelo modelo físico ambíguo e ausência de custo acumulado. O Gemini fica em terceiro pelo erro conceitual no cálculo do volume entregue, que compromete todos os custos reportados. 
+Recomendação: adotar a solução da Lovable IA como base e incorporar do Grok os gráficos comparativos do Dia 1 (demanda × entregue, custo por bairro, pizza de risco e autonomia) para obter uma solução final superior à melhor das três avaliadas.

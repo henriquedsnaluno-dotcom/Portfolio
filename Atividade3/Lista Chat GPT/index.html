@@ -1,0 +1,118 @@
+﻿Lista de 10 Exercícios gerado pela LLM: Chat GPT
+1 Monitoramento de Corrente
+Contextualização: Um técnico precisa verificar se a corrente elétrica está dentro de limites seguros em um circuito.
+2 Consumo de Energia
+Contextualização: Um usuário deseja calcular o consumo mensal de um equipamento elétrico.
+3. Resistores em Série
+Contextualização: Um engenheiro precisa calcular a resistência equivalente de resistores em série.
+4. Resistores em Paralelo
+Contextualização: Calcular a resistência equivalente de dois resistores em paralelo em um circuito.
+5. Verificação de Sobrecarga
+Contextualização: Verificar se um circuito está operando acima da corrente máxima permitida.
+6. Controle de Iluminação
+Contextualização: Calcular o consumo total de lâmpadas em uma residência.
+7. Frequência de um Sinal
+Contextualização: Determinar a frequência de um sinal elétrico a partir do seu período.
+8. Energia em Sistemas Industriais
+Contextualização: Calcular a energia consumida por uma máquina industrial.
+9. Divisão de Tensão
+Contextualização: Calcular a tensão em um resistor dentro de um divisor de tensão.
+10. Conta de Energia
+Contextualização: Estimar o consumo mensal e o custo de energia de vários aparelhos.
+
+
+Códigos em Python
+1: V = float(input("Digite a tensão (V): "))
+R = float(input("Digite a resistência (ohms): "))
+
+I = V / R
+
+if I <= 10:
+   print(f"Corrente: {I:.2f} A - Circuito normal")
+else:
+   print(f"Corrente: {I:.2f} A - Risco de sobrecarga")
+
+
+2: potencia = float(input("Potência (W): "))
+horas = float(input("Horas por dia: "))
+
+consumo_mensal = (potencia / 1000) * horas * 30
+
+print(f"Consumo mensal: {consumo_mensal:.2f} kWh")
+
+
+3: r1 = float(input("R1: "))
+r2 = float(input("R2: "))
+r3 = float(input("R3: "))
+
+req = r1 + r2 + r3
+
+print(f"Resistência equivalente: {req:.2f} ohms")
+
+
+4: r1 = float(input("R1: "))
+r2 = float(input("R2: "))
+
+req = 1 / (1/r1 + 1/r2)
+
+print(f"Resistência equivalente: {req:.2f} ohms")
+
+
+5: r1 = float(input("R1: "))
+r2 = float(input("R2: "))
+
+req = 1 / (1/r1 + 1/r2)
+
+print(f"Resistência equivalente: {req:.2f} ohms")
+
+
+6: qtd = int(input("Quantidade de lâmpadas: "))
+total = 0
+
+for i in range(qtd):
+   potencia = float(input(f"Potência da lâmpada {i+1} (W): "))
+   horas = float(input(f"Horas por dia da lâmpada {i+1}: "))
+   total += (potencia / 1000) * horas * 30
+
+print(f"Consumo total mensal: {total:.2f} kWh")
+
+
+7: T = float(input("Período (segundos): "))
+
+f = 1 / T
+
+print(f"Frequência: {f:.2f} Hz")
+
+
+8: potencia = float(input("Potência da máquina (W): "))
+tempo = float(input("Horas de operação: "))
+
+energia = (potencia / 1000) * tempo
+
+print(f"Energia consumida: {energia:.2f} kWh")
+
+
+9: V = float(input("Tensão total (V): "))
+r1 = float(input("R1: "))
+r2 = float(input("R2: "))
+
+v2 = V * (r2 / (r1 + r2))
+
+print(f"Tensão em R2: {v2:.2f} V")
+
+
+10: qtd = int(input("Quantidade de aparelhos: "))
+total = 0
+
+for i in range(qtd):
+   potencia = float(input(f"Potência do aparelho {i+1} (W): "))
+   horas = float(input(f"Horas por dia: "))
+   dias = int(input("Dias de uso no mês: "))
+
+   total += (potencia / 1000) * horas * dias
+
+preco = float(input("Preço do kWh (R$): "))
+custo = total * preco
+
+print(f"Consumo total: {total:.2f} kWh")
+print(f"Custo mensal: R$ {custo:.2f}")

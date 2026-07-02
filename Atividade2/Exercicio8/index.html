@@ -1,0 +1,14 @@
+﻿# Programa para simular o movimento de um objeto com atrito
+v0 = float(input("Digite a velocidade inicial (v0): "))
+a = float(input("Digite a aceleração (a): "))
+
+
+v = v0
+t = 0
+
+
+print("Tempo (s) | Velocidade (m/s)")
+while v > 0:
+    print(f"{t:.1f}       | {v:.2f}")
+    t += 0.5
+    v = v0 - a * t
