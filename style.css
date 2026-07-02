@@ -1,9 +1,11 @@
-/* Configurações Gerais Baseadas nas Referências Visualizadas */
+/* ==========================================
+   CONFIGURAÇÕES GERAIS (Preto Puro & Branco)
+   ========================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html {
@@ -11,9 +13,9 @@ html {
 }
 
 body {
-    background-color: #06090e; /* Tom azul-escuro profundo igual ao das imagens */
-    color: #f0f3f6;
-    padding-bottom: 80px;
+    background-color: #000000; /* Fundo preto puro original */
+    color: #ffffff;            /* Texto branco principal */
+    padding-bottom: 60px;
 }
 
 .container {
@@ -22,252 +24,70 @@ body {
     padding: 0 24px;
 }
 
-/* Navbar de topo */
+/* ==========================================
+   BARRA DE NAVEGAÇÃO (Navbar)
+   ========================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 24px 40px;
-    background-color: #06090e;
-    border-bottom: 1px solid #161b22;
+    background-color: #000000;
+    border-bottom: 1px solid #111111;
 }
 
 .logo {
-    font-size: 16px;
-    font-family: monospace;
-    color: #8b949e;
-}
-
-.logo .divider {
-    color: #58a6ff;
-}
-
-nav a {
-    color: #8b949e;
-    text-decoration: none;
-    margin-left: 24px;
-    font-size: 14px;
-    transition: color 0.3s;
-}
-
-nav a:hover, nav a.active {
+    font-size: 20px;
+    font-weight: bold;
     color: #ffffff;
 }
 
-/* Seção Hero de Boas-Vindas */
-.hero-section {
-    padding: 100px 0 120px 0;
-    background: radial-gradient(circle at top right, rgba(31, 111, 235, 0.15), transparent 50%);
-    border-bottom: 1px solid #161b22;
+.logo .dot {
+    color: #00ff66; /* Detalhe verde original */
 }
 
-.hero-subtitle {
-    color: #58a6ff;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 13px;
-    letter-spacing: 1px;
-    display: block;
-    margin-bottom: 24px;
+nav a {
+    color: #aaaaaa;
+    text-decoration: none;
+    margin-left: 24px;
+    font-size: 14px;
+    transition: color 0.3s ease;
 }
 
-.hero-title {
-    font-size: 64px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -1px;
-    margin-bottom: 30px;
+nav a:hover, nav a.active {
+    color: #00ff66; /* Verde ao passar o mouse */
 }
 
-.highlight-text {
-    color: #58a6ff; /* O destaque azul sofisticado das referências */
+/* ==========================================
+   SEÇÕES E TÍTULOS
+   ========================================== */
+.about-section, .portfolio-section {
+    padding: 40px 0;
 }
 
-.hero-description {
-    font-size: 18px;
-    color: #8b949e;
-    line-height: 1.6;
-    max-width: 600px;
-    margin-bottom: 40px;
-}
-
-.badge-container {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 50px;
-}
-
-.badge {
-    background-color: #161b22;
-    border: 1px solid #30363d;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    color: #c9d1d9;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.dot-green {
-    width: 8px;
-    height: 8px;
-    background-color: #3fb950;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.scroll-down {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: max-content;
-    color: #8b949e;
-    font-size: 11px;
-    font-family: monospace;
-    gap: 5px;
-}
-
-/* Títulos das Seções */
 .section-title-wrapper {
     display: flex;
     align-items: center;
-    margin: 50px 0 30px 0;
+    margin-bottom: 30px;
 }
 
 .vertical-bar {
-    width: 3px;
-    height: 28px;
-    background-color: #58a6ff;
-    margin-right: 16px;
+    width: 4px;
+    height: 24px;
+    background-color: #00ff66; /* Barra lateral verde */
+    margin-right: 12px;
+    border-radius: 2px;
 }
 
 .section-title-wrapper h2 {
-    font-size: 26px;
-    font-weight: 700;
-}
-
-.italic-title {
-    font-weight: 300;
-    font-style: italic;
-    color: #8b949e;
-}
-
-/* Sobre o Autor / Ficha */
-.about-card {
-    background-color: #0d1117;
-    border: 1px solid #21262d;
-    border-radius: 12px;
-    padding: 40px;
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 40px;
-}
-
-@media(max-width: 768px) {
-    .about-card { grid-template-columns: 1fr; }
-}
-
-.about-text h3 {
     font-size: 24px;
-    margin-bottom: 16px;
+    font-weight: 700;
+    color: #ffffff;
 }
 
-.about-text p {
-    color: #8b949e;
-    line-height: 1.6;
-    font-size: 15px;
-}
-
-.academic-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    border-left: 1px solid #21262d;
-    padding-left: 40px;
-}
-
-@media(max-width: 768px) {
-    .academic-grid { border-left: none; padding-left: 0; }
-}
-
-.academic-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.academic-item .label {
-    font-family: monospace;
-    font-size: 11px;
-    color: #8b949e;
-    letter-spacing: 0.5px;
-}
-
-.academic-item .value {
-    font-size: 15px;
-    font-weight: 600;
-    color: #f0f3f6;
-}
-
-/* Seção de Competências */
-.section-tag {
-    font-family: monospace;
-    font-size: 11px;
-    color: #8b949e;
-    display: block;
-    margin-top: 40px;
-}
-
-.grid-competencias {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-}
-
-.card-competencia {
-    background-color: #0d1117;
-    border: 1px solid #21262d;
-    border-radius: 12px;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-}
-
-.skill-icon {
-    font-size: 28px;
-    margin-bottom: 16px;
-}
-
-.card-competencia h3 {
-    font-size: 18px;
-    margin-bottom: 8px;
-}
-
-.card-competencia p {
-    color: #8b949e;
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    flex-grow: 1;
-}
-
-.progress-bar-container {
-    width: 100%;
-    height: 4px;
-    background-color: #161b22;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background-color: #58a6ff; /* Barra azul sutil de progresso */
-    border-radius: 2px;
-}
-
-/* Grid de Atividades */
+/* ==========================================
+   BARRA DE BUSCA
+   ========================================== */
 .search-container {
     margin-bottom: 30px;
 }
@@ -276,19 +96,22 @@ nav a:hover, nav a.active {
     width: 100%;
     max-width: 400px;
     padding: 12px 16px;
-    background-color: #0d1117;
-    border: 1px solid #21262d;
+    background-color: #0a0a0a;
+    border: 1px solid #222222;
     border-radius: 6px;
-    color: #fff;
+    color: #ffffff;
     font-size: 14px;
     outline: none;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s ease;
 }
 
 .search-container input:focus {
-    border-color: #58a6ff;
+    border-color: #00ff66; /* Borda verde no foco */
 }
 
+/* ==========================================
+   GRID E CARTÕES (Cards de Atividades)
+   ========================================== */
 .grid-atividades {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -296,34 +119,36 @@ nav a:hover, nav a.active {
 }
 
 .card-atividade {
-    background-color: #0d1117;
-    border: 1px solid #21262d;
-    padding: 32px;
-    border-radius: 12px;
+    background-color: #0a0a0a; /* Fundo cinza escuro dos cards */
+    border: 1px solid #1a1a1a;
+    padding: 30px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 260px;
-    transition: transform 0.3s, border-color 0.3s;
+    min-height: 240px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Efeito de passar o mouse por cima do cartão */
 .card-atividade:hover {
-    transform: translateY(-4px);
-    border-color: #30363d;
+    transform: translateY(-5px);
+    border-color: #00ff66; /* Borda vira verde */
+    box-shadow: 0 10px 20px rgba(0, 255, 102, 0.05); /* Brilho verde sutil */
 }
 
 .card-number {
-    color: #58a6ff;
+    color: #00ff66; /* Número em verde */
     font-family: monospace;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     display: block;
 }
 
 .card-atividade h3 {
-    font-size: 14px;
-    color: #8b949e;
+    font-size: 13px;
+    color: #666666;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 6px;
@@ -331,48 +156,52 @@ nav a:hover, nav a.active {
 
 .card-atividade h4 {
     font-size: 18px;
-    color: #f0f3f6;
+    color: #ffffff;
     margin-bottom: 12px;
     font-weight: 600;
     line-height: 1.4;
 }
 
 .card-atividade p {
-    color: #8b949e;
+    color: #aaaaaa;
     font-size: 14px;
     line-height: 1.5;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     flex-grow: 1;
 }
 
+/* Links e Botões */
 .btn-link {
-    color: #58a6ff;
+    color: #ffffff;
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
-    transition: color 0.2s;
+    display: inline-block;
+    transition: color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
     background: none;
     border: none;
-    cursor: pointer;
     padding: 0;
 }
 
-.btn-link:hover {
-    color: #79c0ff;
+.card-atividade:hover .btn-link, .btn-link:hover {
+    color: #00ff66; /* Texto do botão fica verde quando passa o mouse */
 }
 
-/* Efeito de Janela Sobreposta (Modal) */
+/* ==========================================
+   MODAL INTERATIVO (Janela Dinâmica)
+   ========================================== */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro atrás do modal */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
+    z-index: 3000;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -384,13 +213,13 @@ nav a:hover, nav a.active {
 }
 
 .modal-content {
-    background-color: #0d1117;
-    border: 1px solid #30363d;
-    width: 92%;
+    background-color: #0a0a0a;
+    border: 1px solid #222222;
+    width: 90%;
     max-width: 950px;
-    height: 85vh;
-    border-radius: 12px;
-    padding: 32px;
+    height: 80vh;
+    border-radius: 8px;
+    padding: 30px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -398,16 +227,16 @@ nav a:hover, nav a.active {
 
 .btn-fechar {
     position: absolute;
-    top: 24px;
-    right: 28px;
+    top: 20px;
+    right: 25px;
     font-size: 28px;
-    color: #8b949e;
+    color: #aaaaaa;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.2s ease;
 }
 
 .btn-fechar:hover {
-    color: #ff7b72;
+    color: #00ff66; /* Botão de fechar fica verde ao passar o mouse */
 }
 
 .modal-content h2 {
@@ -418,7 +247,7 @@ nav a:hover, nav a.active {
 }
 
 .modal-sub {
-    color: #8b949e;
+    color: #666666;
     font-size: 13px;
     margin-bottom: 20px;
 }
@@ -426,10 +255,10 @@ nav a:hover, nav a.active {
 .embed-container {
     flex-grow: 1;
     width: 100%;
-    border-radius: 6px;
+    border-radius: 4px;
     overflow: hidden;
-    border: 1px solid #21262d;
-    background-color: #ffffff;
+    border: 1px solid #222222;
+    background-color: #ffffff; /* Fundo interno do iframe branco para o documento */
 }
 
 .embed-container iframe {
