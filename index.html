@@ -146,4 +146,52 @@
         }
     </script>
 </body>
+    <div id="modalAtividade" class="modal-overlay" onclick="fecharModalExterno(event)">
+    <div class="modal-content">
+        <span class="btn-fechar" onclick="fecharModal()">&times;</span>
+        
+        <h2>Atividade 01: Seleção e Resolução de Exercícios do Classroom</h2>
+        <p class="modal-sub">Visualização do documento de entrega</p>
+        
+        <div class="embed-container">
+            <iframe src="https://docs.google.com/document/d/1spWv_8Kc4eOXbma4eK7yAxaHZO33TTEm/preview" allow="autoplay"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Função para a barra de pesquisa
+    function filtrarAtividades() {
+        let input = document.getElementById('searchBar').value.toLowerCase();
+        let cards = document.getElementsByClassName('card-atividade');
+        for (let i = 0; i < cards.length; i++) {
+            let titulo = cards[i].getElementsByTagName('h4')[0].innerText.toLowerCase();
+            let sub = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+            if (titulo.includes(input) || sub.includes(input)) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+
+    // Controle do Modal
+    function abrirModal(event) {
+        event.preventDefault(); // Evita que a página role para o topo ao clicar no link
+        document.getElementById('modalAtividade').classList.add('active');
+        document.body.style.overflow = 'hidden'; // Trava o scroll do fundo do site
+    }
+
+    function fecharModal() {
+        document.getElementById('modalAtividade').classList.remove('active');
+        document.body.style.overflow = ''; // Libera o scroll do fundo do site
+    }
+
+    // Fecha o modal se o usuário clicar fora da caixinha (na parte escura)
+    function fecharModalExterno(event) {
+        if (event.target.id === 'modalAtividade') {
+            fecharModal();
+        }
+    }
+</script>
 </html>
