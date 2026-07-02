@@ -3,130 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Acadêmico - Henrique da Silva Nunes</title>
+    <title>Portfólio - Henrique da Silva Nunes</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="navbar">
-        <div class="logo">hsn <span class="divider">/</span> portfolio</div>
+        <div class="logo">Portfólio<span class="dot">.</span></div>
         <nav>
             <a href="#inicio">Início</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#competencias">Competências</a>
             <a href="#entregas" class="active">Atividades</a>
+            <a href="#competencias">Competências</a>
         </nav>
     </header>
 
-    <section id="inicio" class="hero-section">
+    <section id="inicio" class="about-section" style="padding-top: 40px; padding-bottom: 40px;">
         <div class="container">
-            <span class="hero-subtitle">// PORTFÓLIO ACADÊMICO • 2026</span>
-            <h1 class="hero-title">Henrique Viana <br><span class="highlight-text">de Nunes</span></h1>
-            <p class="hero-description">Estudante de Engenharia — Algoritmos & Programação com Python.<br>Universidade Federal do Pampa · Alegrete, RS.</p>
-            <div class="badge-container">
-                <span class="badge"><span class="dot-green"></span> Semestre em andamento</span>
-                <span class="badge">Matrícula 2610101121</span>
-                <span class="badge">Prof. Diego Luis Kreutz</span>
-            </div>
-            <div class="scroll-down">
-                <span>ROLAR</span>
-                <div class="arrow-down">↓</div>
+            <span style="color: #00ff66; font-family: monospace; font-size: 13px; letter-spacing: 1px; display: block; margin-bottom: 15px;">// PORTFÓLIO ACADÊMICO • 2026</span>
+            <h1 style="font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; color: #fff;">
+                Henrique da <br><span style="color: #00ff66;">Silva Nunes</span>
+            </h1>
+            <p style="font-size: 16px; color: #aaa; line-height: 1.6; max-width: 700px; margin-bottom: 30px;">
+                Estudante de engenharia no curso de Algoritmos e Programação ministrado pelo Prof. Diego Luis Kreutz. Ao longo deste semestre desenvolvi habilidades em lógica de programação, Python, estruturas de dados e uso de ferramentas de inteligência artificial como apoio ao aprendizado.
+            </p>
+            
+            <div style="background-color: #0a0a0a; border: 1px solid #222; border-radius: 8px; padding: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 11px; color: #666; font-family: monospace;">MATRÍCULA</span>
+                    <span style="font-weight: bold; color: #fff; font-size: 15px;">2610101121</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 11px; color: #666; font-family: monospace;">DISCIPLINA</span>
+                    <span style="font-weight: bold; color: #fff; font-size: 15px;">Algoritmos e Programação</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 11px; color: #666; font-family: monospace;">PROFESSOR</span>
+                    <span style="font-weight: bold; color: #fff; font-size: 15px;">Diego Luis Kreutz</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 11px; color: #666; font-family: monospace;">UNIVERSIDADE / SEMESTRE</span>
+                    <span style="font-weight: bold; color: #fff; font-size: 15px;">2026/1 — UNIPAMPA Alegrete</span>
+                </div>
             </div>
         </div>
     </section>
 
     <main class="container">
         
-        <section id="sobre" class="about-section">
-            <div class="section-title-wrapper">
-                <span class="vertical-bar"></span>
-                <h2>Sobre o Autor</h2>
-            </div>
-            <div class="about-card">
-                <div class="about-text">
-                    <h3>Henrique da Silva Nunes</h3>
-                    <p>Estudante de engenharia no curso de Algoritmos e Programação ministrado pelo Prof. Diego Luis Kreutz. Ao longo deste semestre desenvolvi habilidades em lógica de programação, Python, estruturas de dados, e uso de ferramentas de inteligência artificial como apoio ao aprendizado.</p>
-                </div>
-                <div class="academic-grid">
-                    <div class="academic-item">
-                        <span class="label">MATRÍCULA</span>
-                        <span class="value">2610101121</span>
-                    </div>
-                    <div class="academic-item">
-                        <span class="label">DISCIPLINA</span>
-                        <span class="value">Algoritmos e Programação</span>
-                    </div>
-                    <div class="academic-item">
-                        <span class="label">PROFESSOR</span>
-                        <span class="value">Diego Luis Kreutz</span>
-                    </div>
-                    <div class="academic-item">
-                        <span class="label">SEMESTRE</span>
-                        <span class="value">2026/1 — UNIPAMPA Alegrete</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="competencias" class="skills-section">
-            <span class="section-tag">04 — HABILIDADES</span>
-            <div class="section-title-wrapper">
-                <span class="vertical-bar"></span>
-                <h2>Competências <span class="italic-title">desenvolvidas</span></h2>
-            </div>
-            
-            <div class="grid-competencias">
-                <div class="card-competencia">
-                    <div class="skill-icon text-green">🐍</div>
-                    <h3>Python</h3>
-                    <p>Variáveis, condicionais, laços, funções, listas, arrays e módulos.</p>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 85%;"></div>
-                    </div>
-                </div>
-                <div class="card-competencia">
-                    <div class="skill-icon text-orange">🧮</div>
-                    <h3>Lógica de Programação</h3>
-                    <p>Fluxogramas, pseudocódigo, decomposição de problemas reais.</p>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 80%;"></div>
-                    </div>
-                </div>
-                <div class="card-competencia">
-                    <div class="skill-icon text-blue">📊</div>
-                    <h3>Estruturas de Dados</h3>
-                    <p>Vetores, listas, dicionários e operações complexas sobre coleções.</p>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 75%;"></div>
-                    </div>
-                </div>
-                <div class="card-competencia">
-                    <div class="skill-icon text-purple">🤖</div>
-                    <h3>IA & LLMs</h3>
-                    <p>Uso de modelos de linguagem para geração e avaliação crítica de exercícios.</p>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 90%;"></div>
-                    </div>
-                </div>
-                <div class="card-competencia">
-                    <div class="skill-icon text-pink">⚙️</div>
-                    <h3>Engenharia Aplicada</h3>
-                    <p>Modelagem e resolução de problemas analíticos de engenharia com código.</p>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 70%;"></div>
-                    </div>
-                </div>
-                <div class="card-competencia">
-                    <div class="skill-icon text-cyan">🌐</div>
-                    <h3>Web & GitHub</h3>
-                    <p>HTML, CSS, estruturação de portfólios, Git e versionamento básico.</p>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 65%;"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="entregas" class="portfolio-section">
             <div class="section-title-wrapper">
                 <span class="vertical-bar"></span>
@@ -216,7 +139,7 @@
                     <h3>Atividade 10</h3>
                     <h4>Desenvolvimento de Soluções em Python com IA para o Portal de Alegrete-RS</h4>
                     <p>Construção e implementação de ferramentas inteligentes dedicadas ao portal público do município.</p>
-                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div style="margin-top: 15px; display: flex; gap: 15px; flex-wrap: wrap;">
                         <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 10: Documento de Desenvolvimento (IA - Alegrete)', 'https://docs.google.com/document/d/1OIcW0LtsJqdj-huhFUXB0_Ao_fz1uX7X/preview')">Ver Documento &rarr;</a>
                         <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 10: Arquivo de Suporte / Código', 'https://drive.google.com/file/d/1pSJgSAczPrstyWVcgD1U2lm3Q8dX8S4p/preview')">Ver Arquivo &rarr;</a>
                     </div>
@@ -224,6 +147,65 @@
 
             </div>
         </section>
+
+        <section id="competencias" class="portfolio-section" style="margin-top: 50px;">
+            <div class="section-title-wrapper">
+                <span class="vertical-bar"></span>
+                <h2>Competências Desenvolvidas</h2>
+            </div>
+            
+            <div class="grid-atividades">
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🐍</div>
+                    <h4>Python</h4>
+                    <p style="margin-bottom: 15px;">Variáveis, condicionais, laços, funções, listas, arrays e módulos.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 85%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🧮</div>
+                    <h4>Lógica de Programação</h4>
+                    <p style="margin-bottom: 15px;">Fluxogramas, pseudocódigo e decomposição de problemas estruturados.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 80%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
+                    <h4>Estruturas de Dados</h4>
+                    <p style="margin-bottom: 15px;">Vetores, listas, dicionários e operações complexas sobre coleções.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 75%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🤖</div>
+                    <h4>IA & LLMs</h4>
+                    <p style="margin-bottom: 15px;">Uso de modelos de linguagem para geração e avaliação crítica de exercícios.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 90%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">⚙️</div>
+                    <h4>Engenharia Aplicada</h4>
+                    <p style="margin-bottom: 15px;">Modelagem e resolução de problemas analíticos de engenharia com códigos.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 70%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🌐</div>
+                    <h4>Web & GitHub</h4>
+                    <p style="margin-bottom: 15px;">HTML, CSS, estruturação de portfólios locais e controle via Git.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 65%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <div id="modalDinamico" class="modal-overlay" onclick="fecharModalExterno(event)">
@@ -242,12 +224,17 @@
             let input = document.getElementById('searchBar').value.toLowerCase();
             let cards = document.getElementsByClassName('card-atividade');
             for (let i = 0; i < cards.length; i++) {
-                let titulo = cards[i].getElementsByTagName('h4')[0].innerText.toLowerCase();
-                let sub = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-                if (titulo.includes(input) || sub.includes(input)) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
+                // Filtra apenas se houver tag h4 válida no cartão (evita quebrar nos cartões de competência)
+                let h4Elements = cards[i].getElementsByTagName('h4');
+                let h3Elements = cards[i].getElementsByTagName('h3');
+                if (h4Elements.length > 0) {
+                    let titulo = h4Elements[0].innerText.toLowerCase();
+                    let sub = h3Elements.length > 0 ? h3Elements[0].innerText.toLowerCase() : "";
+                    if (titulo.includes(input) || sub.includes(input)) {
+                        cards[i].style.display = "";
+                    } else {
+                        cards[i].style.display = "none";
+                    }
                 }
             }
         }
