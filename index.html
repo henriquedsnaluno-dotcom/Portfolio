@@ -12,6 +12,7 @@
         <div class="logo">Portfólio<span class="dot">.</span></div>
         <nav>
             <a href="#sobre">Sobre</a>
+            <a href="#competencias">Competências</a>
             <a href="#entregas" class="active">Atividades</a>
         </nav>
     </header>
@@ -23,12 +24,86 @@
                 <span class="vertical-bar"></span>
                 <h2>Sobre o Autor</h2>
             </div>
-            <div class="about-content">
-                <p>Olá! Bem-vindo ao meu portfólio. Sou um desenvolvedor em início de carreira, focado em criar soluções limpas e eficientes. Aqui você pode acompanhar a evolução dos meus estudos através das minhas entregas de projetos e algoritmos.</p>
-                <div class="social-links">
-                    <a href="#" target="_blank" class="social-btn">GitHub</a>
-                    <a href="#" target="_blank" class="social-btn">LinkedIn</a>
-                    <a href="#" target="_blank" class="social-btn">Discord</a>
+            <div class="about-content" style="background-color: #0d1117; border: 1px solid #222; border-radius: 8px; padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div class="about-text">
+                    <h3 style="margin-bottom: 10px; font-size: 22px;">Henrique da Silva Nunes</h3>
+                    <p style="color: #777; line-height: 1.6;">Estudante de engenharia no curso de Algoritmos e Programação ministrado pelo Prof. Diego Luis Kreutz. Ao longo deste semestre desenvolvi habilidades em lógica de programação, Python, estruturas de dados, e uso de ferramentas de inteligência artificial como apoio ao aprendizado.</p>
+                </div>
+                <div class="academic-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-left: 1px solid #222; padding-left: 30px;">
+                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
+                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">MATRÍCULA</span>
+                        <span class="value" style="font-weight: bold;">2610101121</span>
+                    </div>
+                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
+                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">DISCIPLINA</span>
+                        <span class="value" style="font-weight: bold;">Algoritmos e Programação</span>
+                    </div>
+                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
+                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">PROFESSOR</span>
+                        <span class="value" style="font-weight: bold;">Diego Luis Kreutz</span>
+                    </div>
+                    <div class="academic-item" style="display: flex; flex-direction: column; gap: 4px;">
+                        <span class="label" style="font-size: 11px; color: #777; font-family: monospace;">SEMESTRE</span>
+                        <span class="value" style="font-weight: bold;">2026/1 — UNIPAMPA</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competencias" class="portfolio-section" style="margin-top: 40px;">
+            <div class="section-title-wrapper">
+                <span class="vertical-bar"></span>
+                <h2>Competências Desenvolvidas</h2>
+            </div>
+            
+            <div class="grid-atividades">
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🐍</div>
+                    <h4 style="margin-top: 5px;">Python</h4>
+                    <p style="margin-bottom: 15px;">Variáveis, condicionais, laços, funções, listas, arrays e módulos.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 85%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🧮</div>
+                    <h4 style="margin-top: 5px;">Lógica de Programação</h4>
+                    <p style="margin-bottom: 15px;">Fluxogramas, pseudocódigo e decomposição de problemas estruturados.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 80%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">📊</div>
+                    <h4 style="margin-top: 5px;">Estruturas de Dados</h4>
+                    <p style="margin-bottom: 15px;">Vetores, listas, dicionários e operações complexas sobre coleções.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 75%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🤖</div>
+                    <h4 style="margin-top: 5px;">IA & LLMs</h4>
+                    <p style="margin-bottom: 15px;">Uso de modelos de linguagem para geração e avaliação de exercícios.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 90%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">⚙️</div>
+                    <h4 style="margin-top: 5px;">Engenharia Aplicada</h4>
+                    <p style="margin-bottom: 15px;">Modelagem e resolução de problemas analíticos com códigos funcionais.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 70%; height: 100%; background: #00ff66;"></div>
+                    </div>
+                </div>
+                <div class="card-atividade" style="min-height: auto; padding: 25px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🌐</div>
+                    <h4 style="margin-top: 5px;">Web & GitHub</h4>
+                    <p style="margin-bottom: 15px;">HTML, CSS, estruturação de portfólios locais e controle via Git.</p>
+                    <div style="width: 100%; height: 4px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: 65%; height: 100%; background: #00ff66;"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -66,7 +141,7 @@
                     <h3>Atividade 03</h3>
                     <h4>Comparação de Modelos de Linguagem na Geração de Exercícios de Algoritmos para Engenharia Elétrica</h4>
                     <p>Análise comparativa do uso de modelos de inteligência artificial aplicados à criação de problemas práticos de programação.</p>
-                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 03: Comparação de Modelos de Linguagem na Geração de Exercícios para Engenharia Elétrica', 'https://docs.google.com/document/d/1jBVY-FnTP4p71U21ZYQT7ZUyj7uoSf7l/preview')">Abrir Atividade &rarr;</a>
+                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 03: Comparação de Modelos de Linguagem', 'https://docs.google.com/document/d/1jBVY-FnTP4p71U21ZYQT7ZUyj7uoSf7l/preview')">Abrir Atividade &rarr;</a>
                 </div>
 
                 <div class="card-atividade">
@@ -74,7 +149,7 @@
                     <h3>Atividade 04</h3>
                     <h4>Implementação e Execução de Exercícios de Listas, Vetores e Arrays em Python</h4>
                     <p>Desenvolvimento prático e testes focados em estruturas de dados sequenciais utilizando Python.</p>
-                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 04: Implementação e Execução de Exercícios de Listas, Vetores e Arrays em Python', 'https://docs.google.com/document/d/1UNS4ndRpdMN2NH6Tc42hI9_LERSjFj0sVKvlxbcJanI/preview')">Abrir Atividade &rarr;</a>
+                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 04: Implementação e Execução de Exercícios', 'https://docs.google.com/document/d/1UNS4ndRpdMN2NH6Tc42hI9_LERSjFj0sVKvlxbcJanI/preview')">Abrir Atividade &rarr;</a>
                 </div>
 
                 <div class="card-atividade">
@@ -82,7 +157,7 @@
                     <h3>Atividade 05</h3>
                     <h4>Análise de Estabilidade e Custo em Sistemas de Abastecimento de Água</h4>
                     <p>Estudo analítico e modelagem voltada a fatores financeiros e estruturais em redes hidráulicas de abastecimento.</p>
-                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 05: Análise de Estabilidade e Custo em Sistemas de Abastecimento de Água', 'https://docs.google.com/document/d/1JqyfsjYNdcDqi8pdvTos9kNtnsCu1plmdA4qV7U4HKs/preview')">Abrir Atividade &rarr;</a>
+                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 05: Análise de Estabilidade e Custo', 'https://docs.google.com/document/d/1JqyfsjYNdcDqi8pdvTos9kNtnsCu1plmdA4qV7U4HKs/preview')">Abrir Atividade &rarr;</a>
                 </div>
 
                 <div class="card-atividade">
@@ -98,7 +173,7 @@
                     <h3>Atividade 07</h3>
                     <h4>Resolução de Problema de Engenharia com Apoio de Inteligência Artificial</h4>
                     <p>Uso estratégico de ferramentas inteligentes para modelagem e desenvolvimento de soluções técnicas.</p>
-                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 07: Resolução de Problema de Engenharia com Apoio de Inteligência Artificial', 'https://docs.google.com/document/d/1dPHlM08f6AYFQ5oChpC3WNDqTJ1VYyRL/preview')">Abrir Atividade &rarr;</a>
+                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 07: Resolução de Problema de Engenharia com IA', 'https://docs.google.com/document/d/1dPHlM08f6AYFQ5oChpC3WNDqTJ1VYyRL/preview')">Abrir Atividade &rarr;</a>
                 </div>
 
                 <div class="card-atividade">
@@ -106,7 +181,7 @@
                     <h3>Atividade 08</h3>
                     <h4>Aprimoramento da Solução de Engenharia Utilizando LLMs</h4>
                     <p>Refinamento de processos e otimização de códigos complexos aplicando modelos de linguagem avançados.</p>
-                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 08: Aprimoramento da Solução de Engenharia Utilizando LLMs', 'https://docs.google.com/document/d/1GIruZ6rONQ3CH9W8XqKFCXVnzAeSdPCx/preview')">Abrir Atividade &rarr;</a>
+                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 08: Aprimoramento da Solução utilizando LLMs', 'https://docs.google.com/document/d/1GIruZ6rONQ3CH9W8XqKFCXVnzAeSdPCx/preview')">Abrir Atividade &rarr;</a>
                 </div>
 
                 <div class="card-atividade">
@@ -114,7 +189,7 @@
                     <h3>Atividade 09</h3>
                     <h4>Avaliação Crítica de Portal Digital com Propostas de Melhoria</h4>
                     <p>Auditoria de interface, usabilidade e levantamento de soluções de aprimoramento para plataformas online.</p>
-                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 09: Avaliação Crítica de Portal Digital com Propostas de Melhoria', 'https://docs.google.com/document/d/1xBK14DV0cy9WCcqZ-7wlk_dgKZAsKOBk/preview')">Abrir Atividade &rarr;</a>
+                    <a href="#" class="btn-link" onclick="abrirModal(event, 'Atividade 09: Avaliação Crítica de Portal Digital', 'https://docs.google.com/document/d/1xBK14DV0cy9WCcqZ-7wlk_dgKZAsKOBk/preview')">Abrir Atividade &rarr;</a>
                 </div>
 
                 <div class="card-atividade">
@@ -135,10 +210,8 @@
     <div id="modalDinamico" class="modal-overlay" onclick="fecharModalExterno(event)">
         <div class="modal-content">
             <span class="btn-fechar" onclick="fecharModal()">&times;</span>
-            
             <h2 id="modalTitulo">Título da Atividade</h2>
             <p class="modal-sub">Visualização do documento de entrega</p>
-            
             <div class="embed-container">
                 <iframe id="modalIframe" src="" allow="autoplay"></iframe>
             </div>
@@ -146,7 +219,6 @@
     </div>
 
     <script>
-        // Sistema de busca e filtragem
         function filtrarAtividades() {
             let input = document.getElementById('searchBar').value.toLowerCase();
             let cards = document.getElementsByClassName('card-atividade');
@@ -161,32 +233,22 @@
             }
         }
 
-        // Funções Dinâmicas do Modal (Abre qualquer atividade sem duplicar código)
         function abrirModal(event, titulo, linkDocumento) {
             event.preventDefault();
-            
-            if(linkDocumento === '#') {
-                alert('O documento para esta atividade ainda não foi adicionado.');
-                return;
-            }
-
             document.getElementById('modalTitulo').innerText = titulo;
             document.getElementById('modalIframe').src = linkDocumento;
-            
             document.getElementById('modalDinamico').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Trava a barra de rolagem ao fundo
+            document.body.style.overflow = 'hidden';
         }
 
         function fecharModal() {
             document.getElementById('modalDinamico').classList.remove('active');
-            document.getElementById('modalIframe').src = ''; // Limpa o iframe para parar áudios/vídeos
-            document.body.style.overflow = ''; // Destrava a barra de rolagem do fundo
+            document.getElementById('modalIframe').src = '';
+            document.body.style.overflow = '';
         }
 
         function fecharModalExterno(event) {
-            if (event.target.id === 'modalDinamico') { 
-                fecharModal(); 
-            }
+            if (event.target.id === 'modalDinamico') { fecharModal(); }
         }
     </script>
 </body>
