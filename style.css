@@ -1,46 +1,52 @@
-/* Configurações Gerais */
+/* Configurações Gerais Baseadas nas Referências Visualizadas */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: #0c0c0c;
-    color: #ffffff;
-    padding-bottom: 50px;
+    background-color: #06090e; /* Tom azul-escuro profundo igual ao das imagens */
+    color: #f0f3f6;
+    padding-bottom: 80px;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
-/* Navbar */
+/* Navbar de topo */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 40px;
-    background-color: #0c0c0c;
+    padding: 24px 40px;
+    background-color: #06090e;
+    border-bottom: 1px solid #161b22;
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 16px;
+    font-family: monospace;
+    color: #8b949e;
 }
 
-.logo .dot {
-    color: #00ff66;
+.logo .divider {
+    color: #58a6ff;
 }
 
 nav a {
-    color: #888;
+    color: #8b949e;
     text-decoration: none;
-    margin-left: 20px;
-    font-size: 16px;
+    margin-left: 24px;
+    font-size: 14px;
     transition: color 0.3s;
 }
 
@@ -48,63 +54,220 @@ nav a:hover, nav a.active {
     color: #ffffff;
 }
 
+/* Seção Hero de Boas-Vindas */
+.hero-section {
+    padding: 100px 0 120px 0;
+    background: radial-gradient(circle at top right, rgba(31, 111, 235, 0.15), transparent 50%);
+    border-bottom: 1px solid #161b22;
+}
+
+.hero-subtitle {
+    color: #58a6ff;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 24px;
+}
+
+.hero-title {
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 30px;
+}
+
+.highlight-text {
+    color: #58a6ff; /* O destaque azul sofisticado das referências */
+}
+
+.hero-description {
+    font-size: 18px;
+    color: #8b949e;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+.badge-container {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+}
+
+.badge {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #c9d1d9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dot-green {
+    width: 8px;
+    height: 8px;
+    background-color: #3fb950;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.scroll-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+    color: #8b949e;
+    font-size: 11px;
+    font-family: monospace;
+    gap: 5px;
+}
+
 /* Títulos das Seções */
 .section-title-wrapper {
     display: flex;
     align-items: center;
-    margin: 40px 0 25px 0;
+    margin: 50px 0 30px 0;
 }
 
 .vertical-bar {
-    width: 4px;
-    height: 35px;
-    background-color: #00ff66;
-    margin-right: 15px;
-    display: inline-block;
+    width: 3px;
+    height: 28px;
+    background-color: #58a6ff;
+    margin-right: 16px;
 }
 
 .section-title-wrapper h2 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
 }
 
-/* Seção Sobre o Autor */
-.about-content {
-    background-color: #121212;
-    padding: 25px;
-    border-radius: 8px;
-    border: 1px solid #1a1a1a;
-    margin-bottom: 40px;
+.italic-title {
+    font-weight: 300;
+    font-style: italic;
+    color: #8b949e;
 }
 
-.about-content p {
-    color: #aaa;
+/* Sobre o Autor / Ficha */
+.about-card {
+    background-color: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 12px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+}
+
+@media(max-width: 768px) {
+    .about-card { grid-template-columns: 1fr; }
+}
+
+.about-text h3 {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.about-text p {
+    color: #8b949e;
     line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 15px;
 }
 
-.social-links {
+.academic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    border-left: 1px solid #21262d;
+    padding-left: 40px;
+}
+
+@media(max-width: 768px) {
+    .academic-grid { border-left: none; padding-left: 0; }
+}
+
+.academic-item {
     display: flex;
-    gap: 15px;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.social-btn {
-    color: #00ff66;
-    text-decoration: none;
-    border: 1px solid #00ff66;
-    padding: 8px 16px;
-    border-radius: 4px;
+.academic-item .label {
+    font-family: monospace;
+    font-size: 11px;
+    color: #8b949e;
+    letter-spacing: 0.5px;
+}
+
+.academic-item .value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #f0f3f6;
+}
+
+/* Seção de Competências */
+.section-tag {
+    font-family: monospace;
+    font-size: 11px;
+    color: #8b949e;
+    display: block;
+    margin-top: 40px;
+}
+
+.grid-competencias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.card-competencia {
+    background-color: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.skill-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+
+.card-competencia h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.card-competencia p {
+    color: #8b949e;
     font-size: 14px;
-    transition: all 0.3s ease;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    flex-grow: 1;
 }
 
-.social-btn:hover {
-    background-color: #00ff66;
-    color: #0c0c0c;
-    font-weight: bold;
+.progress-bar-container {
+    width: 100%;
+    height: 4px;
+    background-color: #161b22;
+    border-radius: 2px;
+    overflow: hidden;
 }
 
-/* Interação: Barra de Pesquisa */
+.progress-bar {
+    height: 100%;
+    background-color: #58a6ff; /* Barra azul sutil de progresso */
+    border-radius: 2px;
+}
+
+/* Grid de Atividades */
 .search-container {
     margin-bottom: 30px;
 }
@@ -112,9 +275,9 @@ nav a:hover, nav a.active {
 .search-container input {
     width: 100%;
     max-width: 400px;
-    padding: 12px 15px;
-    background-color: #121212;
-    border: 1px solid #222;
+    padding: 12px 16px;
+    background-color: #0d1117;
+    border: 1px solid #21262d;
     border-radius: 6px;
     color: #fff;
     font-size: 14px;
@@ -123,83 +286,82 @@ nav a:hover, nav a.active {
 }
 
 .search-container input:focus {
-    border-color: #00ff66;
+    border-color: #58a6ff;
 }
 
-/* Grid de Atividades */
 .grid-atividades {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 25px;
+    gap: 24px;
 }
 
-/* Card de Atividade */
 .card-atividade {
-    background-color: #121212;
-    border: 1px solid #1a1a1a;
-    padding: 30px;
-    border-radius: 8px;
+    background-color: #0d1117;
+    border: 1px solid #21262d;
+    padding: 32px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 250px;
+    min-height: 260px;
     transition: transform 0.3s, border-color 0.3s;
 }
 
 .card-atividade:hover {
-    transform: translateY(-5px);
-    border-color: #222;
+    transform: translateY(-4px);
+    border-color: #30363d;
 }
 
 .card-number {
-    color: #00ff66;
+    color: #58a6ff;
     font-family: monospace;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     display: block;
 }
 
 .card-atividade h3 {
-    font-size: 20px;
-    margin-bottom: 8px;
-    color: #ffffff;
+    font-size: 14px;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
 }
 
 .card-atividade h4 {
-    font-size: 15px;
-    color: #e0e0e0;
+    font-size: 18px;
+    color: #f0f3f6;
     margin-bottom: 12px;
-    font-weight: 500;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 .card-atividade p {
-    color: #777;
+    color: #8b949e;
     font-size: 14px;
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     flex-grow: 1;
 }
 
 .btn-link {
-    color: #ffffff;
+    color: #58a6ff;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     transition: color 0.2s;
-    display: inline-block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 .btn-link:hover {
-    color: #00ff66;
+    color: #79c0ff;
 }
 
-
-/* ==========================================
-   ESTILOS DO MODAL (JANELA SOBREPOSTA)
-   ========================================== */
-
-/* Fundo escurecido que cobre o site inteiro */
+/* Efeito de Janela Sobreposta (Modal) */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -210,68 +372,63 @@ nav a:hover, nav a.active {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
-/* Estado ativo do modal (quando aparece) */
 .modal-overlay.active {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* Caixa de conteúdo interna do modal */
 .modal-content {
-    background-color: #121212;
-    border: 1px solid #222;
-    width: 90%;
-    max-width: 900px;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    width: 92%;
+    max-width: 950px;
     height: 85vh;
-    border-radius: 8px;
-    padding: 30px;
+    border-radius: 12px;
+    padding: 32px;
     position: relative;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Botão de Fechar (X) */
 .btn-fechar {
     position: absolute;
-    top: 20px;
-    right: 25px;
-    font-size: 30px;
-    color: #777;
+    top: 24px;
+    right: 28px;
+    font-size: 28px;
+    color: #8b949e;
     cursor: pointer;
     transition: color 0.2s;
 }
 
 .btn-fechar:hover {
-    color: #00ff66;
+    color: #ff7b72;
 }
 
 .modal-content h2 {
-    font-size: 22px;
+    font-size: 20px;
     color: #ffffff;
-    margin-bottom: 5px;
-    padding-right: 30px;
+    margin-bottom: 4px;
+    padding-right: 40px;
 }
 
 .modal-sub {
-    color: #777;
-    font-size: 14px;
+    color: #8b949e;
+    font-size: 13px;
     margin-bottom: 20px;
 }
 
-/* Container do iFrame para torná-lo flexível */
 .embed-container {
     flex-grow: 1;
     width: 100%;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
-    border: 1px solid #1a1a1a;
+    border: 1px solid #21262d;
     background-color: #ffffff;
 }
 
